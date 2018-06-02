@@ -5,6 +5,7 @@
   "devDependencies": {
     "@types/graphql": "^0.13.1",
     "@types/node": "10.3.0",
+    "@types/uuid": "^3.4.3",
     "nodemon": "^1.17.5",
     "ts-node": "6.0.5",
     "tslint": "^5.10.0",
@@ -16,7 +17,8 @@
     "graphql": "^0.13.2",
     "pg": "^7.4.3",
     "reflect-metadata": "^0.1.10",
-    "typeorm": "^0.2.6"
+    "typeorm": "^0.2.6",
+    "uuid": "^3.2.1"
   },
   "scripts": {
     "start": "nodemon --exec ts-node src/index.ts"
