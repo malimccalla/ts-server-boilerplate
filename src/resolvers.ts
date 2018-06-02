@@ -3,10 +3,10 @@ import { ResolverMap } from './types';
 
 const resolvers: ResolverMap = {
   Query: {
-    hello: (_, { name }) => `Helo ${name || 'world'}`,
+    hello: (_, { name }: GQL.IHelloOnQueryArguments) => `Helo ${name || 'world'}`,
   },
   Mutation: {
-    register: async (_, { email, password }) => {
+    register: async (_, { email, password }: GQL.IRegisterOnMutationArguments) => {
       await User.create({ email, password });
     },
   },
