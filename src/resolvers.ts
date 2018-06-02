@@ -6,8 +6,12 @@ const resolvers: ResolverMap = {
     hello: (_, { name }: GQL.IHelloOnQueryArguments) => `Helo ${name || 'world'}`,
   },
   Mutation: {
-    register: async (_, { email, password }: GQL.IRegisterOnMutationArguments) => {
-      await User.create({ email, password });
+    register: async (
+      _: any,
+      args: GQL.IRegisterOnMutationArguments
+    ): Promise<boolean> => {
+      await User.create(args).save();
+      return true;
     },
   },
 };
