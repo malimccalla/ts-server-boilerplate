@@ -1,3 +1,14 @@
 type Mutation {
-  register(email: String!, password: String!): Boolean!
+  register(email: String!, password: String!): RegisterResponse!
+}
+
+type RegisterResponse {
+  ok: Boolean!
+  user: User
+  errors: [Error!]
+}
+
+type User {
+  email: String
+  id: String!
 }

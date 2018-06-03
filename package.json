@@ -31,6 +31,6 @@
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",
     "start": "ts-node src/index.ts",
-    "gen:types": "apollo-codegen introspect-schema http://localhost:4000 && gql2ts schema.json -o src/types/schema.d.ts"
+    "gen:types": "apollo-codegen introspect-schema http://localhost:4000 && gql2ts --ignore-type-name-declaration schema.json -o src/types/schema.d.ts"
   }
 }
