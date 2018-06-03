@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import { ApolloServer } from 'apollo-server';
-import typeDefs from './schema';
-import resolvers from './resolvers';
 import { createConnection } from 'typeorm';
 
-const server = new ApolloServer({ typeDefs, resolvers });
+import schema from './schema';
 
 async function main() {
+  const server = new ApolloServer({ schema });
+
   await createConnection();
 
   const serverInfo = await server.listen();
