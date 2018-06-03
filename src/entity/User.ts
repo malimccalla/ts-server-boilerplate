@@ -7,7 +7,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { v4 } from 'uuid';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -17,11 +16,6 @@ export class User extends BaseEntity {
   email: string;
 
   @Column('text') password: string;
-
-  @BeforeInsert()
-  addId() {
-    this.id = v4();
-  }
 
   @BeforeInsert()
   async hashPassword() {
