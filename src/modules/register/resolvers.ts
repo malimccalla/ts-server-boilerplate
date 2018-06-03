@@ -8,7 +8,7 @@ const schema = yup.object().shape({
     .string()
     .min(3)
     .max(255)
-    .email(),
+    .email('Invalid email'),
   password: yup
     .string()
     .min(8, 'Password must be longer than 8 characters')
