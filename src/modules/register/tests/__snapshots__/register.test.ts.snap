@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Register Email validation should not allow an invalid email 1`] = `
+Array [
+  Object {
+    "message": "Invalid email",
+    "path": "email",
+  },
+]
+`;
+
+exports[`Register Password validation should not allow a password less than 8 characters 1`] = `
+Array [
+  Object {
+    "message": "Password must be longer than 8 characters",
+    "path": "password",
+  },
+]
+`;
