@@ -1,6 +1,9 @@
 import { gql } from 'apollo-server';
 import { request } from 'graphql-request';
 import { host } from '../../../constants';
+import { createTypeormConn } from '../../../util/createTypeormConn';
+import { Connection } from 'typeorm';
+import { User } from '../../../entity/User';
 
 const registerMutation = (email: any, password: any) => gql`
     mutation {
@@ -24,6 +27,37 @@ describe('Register', () => {
 
   const invalidEmail = 'Invalid email';
   const invalidPassword = 'pass123';
+
+  let connection: Connection;
+
+  beforeAll(async () => {
+    connection = await createTypeormConn();
+  });
+
+  afterAll(async () => {
+    await connection.close();
+  });
+
+  describe('Happy path', () => {
+    test('should return a user on creation', async () => {
+      const mutation = registerMutation(validEmail, validPassword);
+      const { register } = (await request(host, mutation)) as {
+        register: GQL.IRegisterResponse;
+      };
+
+      const user = await User.findOne({ where: { email: validEmail } });
+      const userCount = await User.count();
+
+      expect(register.ok).toBe(true);
+      expect(register.user).toBeTruthy();
+      expect(register.user!.email).toEqual(validEmail);
+
+      // check password has been hashed
+      expect(user!.password).not.toEqual(validPassword);
+
+      expect(userCount).toBe(1);
+    });
+  });
 
   describe('Email validation', () => {
     test('should not allow an invalid email', async () => {

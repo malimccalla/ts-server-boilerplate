@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import { ApolloServer } from 'apollo-server';
-import { createConnection } from 'typeorm';
 
 import schema from './schema';
 import { GraphQLError } from 'graphql';
+import { createTypeormConn } from './util/createTypeormConn';
 
 async function main() {
   const server = new ApolloServer({
@@ -11,7 +11,7 @@ async function main() {
     formatError: (e: GraphQLError) => console.log(e),
   });
 
-  await createConnection();
+  await createTypeormConn();
 
   const serverInfo = await server.listen();
   console.log(`server listening at ${serverInfo.url}`);
