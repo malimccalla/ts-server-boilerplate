@@ -30,11 +30,11 @@ describe('Register', () => {
 
   let connection: Connection;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     connection = await createTypeormConn();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await connection.close();
   });
 
@@ -51,11 +51,10 @@ describe('Register', () => {
       expect(register.ok).toBe(true);
       expect(register.user).toBeTruthy();
       expect(register.user!.email).toEqual(validEmail);
+      expect(userCount).toBe(1);
 
       // check password has been hashed
       expect(user!.password).not.toEqual(validPassword);
-
-      expect(userCount).toBe(1);
     });
   });
 
@@ -66,10 +65,14 @@ describe('Register', () => {
         register: GQL.IRegisterResponse;
       };
 
+      const userCount = await User.count();
+
       expect(register.ok).toBe(false);
       expect(register.errors).toHaveLength(1);
       expect(register.user).toBeFalsy();
       expect(register.errors).toMatchSnapshot();
+
+      expect(userCount).toBe(0);
     });
   });
 
@@ -80,10 +83,14 @@ describe('Register', () => {
         register: GQL.IRegisterResponse;
       };
 
+      const userCount = await User.count();
+
       expect(register.ok).toBe(false);
       expect(register.errors).toHaveLength(1);
       expect(register.user).toBeFalsy();
       expect(register.errors).toMatchSnapshot();
+
+      expect(userCount).toBe(0);
     });
   });
 });
