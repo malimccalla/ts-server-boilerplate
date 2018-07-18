@@ -11,10 +11,14 @@ async function main() {
     formatError: (e: GraphQLError) => console.log(e),
   });
 
-  await createTypeormConn();
+  const port = process.env.PORT === 'test' ? 0 : 4000;
 
-  const serverInfo = await server.listen();
+  await createTypeormConn();
+  const serverInfo = await server.listen({ http: { port } });
+
   console.log(`server listening at ${serverInfo.url}`);
+
+  return serverInfo;
 }
 
 main();
