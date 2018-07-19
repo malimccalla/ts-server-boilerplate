@@ -84,6 +84,20 @@ describe('Register', () => {
 
       expect(userCount).toBe(0);
     });
+
+    test('should not duplicate emails', async () => {
+      const mutation = registerMutation(validEmail, validPassword);
+      await request(host, mutation);
+      const { register } = (await request(host, mutation)) as {
+        register: GQL.IRegisterResponse;
+      };
+
+      expect(register.ok).toBe(false);
+      expect(register.errors).toHaveLength(1);
+      expect(register.errors).toMatchSnapshot();
+
+      expect(register.errors[0].message).toEqual('Email already in use');
+    });
   });
 
   describe('Password validation', () => {

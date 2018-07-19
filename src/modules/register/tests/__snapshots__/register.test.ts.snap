@@ -9,6 +9,15 @@ Array [
 ]
 `;
 
+exports[`Register Email validation should not duplicate emails 1`] = `
+Array [
+  Object {
+    "message": "Email already in use",
+    "path": "Email",
+  },
+]
+`;
+
 exports[`Register Password validation should not allow a password less than 8 characters 1`] = `
 Array [
   Object {
