@@ -10,12 +10,12 @@ export const startServer = async () => {
     formatError: (e: GraphQLError) => console.log(e),
   });
 
-  const port = process.env.PORT === 'test' ? 0 : 4000;
+  const port = process.env.NODE_ENV === 'test' ? 0 : 4000;
 
-  await createTypeormConn();
+  const connection = await createTypeormConn();
   const serverInfo = await server.listen({ http: { port } });
 
   console.log(`server listening at ${serverInfo.url}`);
 
-  return serverInfo;
+  return { serverInfo, connection };
 };

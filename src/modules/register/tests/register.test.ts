@@ -1,50 +1,55 @@
 import { gql } from 'apollo-server';
 import { request } from 'graphql-request';
-// import { host } from '../../../constants';
-import { createTypeormConn } from '../../../util/createTypeormConn';
-import { Connection, getConnection } from 'typeorm';
+import { Connection } from 'typeorm';
 import { User } from '../../../entity/User';
 import { startServer } from '../../../server';
+import { createTypeormConn } from '../../../util/createTypeormConn';
 
 const registerMutation = (email: any, password: any) => gql`
-    mutation {
-      register(email: "${email}", password: "${password}") {
-        ok
-        user {
-          id
-          email
-        }
-        errors {
-          path
-          message
-        }
+  mutation {
+    register(email: "${email}", password: "${password}") {
+      ok
+      user {
+        id
+        email
+      }
+      errors {
+        path
+        message
       }
     }
-  `;
+  }
+`;
 
 describe('Register', () => {
   let host: string;
+  let connection: Connection;
+
   const validEmail = 'tester@mali.com';
   const validPassword = 'superS3Cr7t!';
 
   const invalidEmail = 'Invalid email';
   const invalidPassword = 'pass123';
 
-  let connection: Connection;
-
   beforeAll(async () => {
-    connection = getConnection('test');
-    // connection = await createTypeormConn();
-    const { port } = await startServer();
-    host = `http://127.0.0.1:${port}`;
+    const res = await startServer();
+    connection = res.connection;
+
+    host = `http://127.0.0.1:${res.serverInfo.port}`;
   });
 
-  afterAll(async () => {
+  beforeEach(async () => {
+    if (!connection.isConnected) {
+      connection = await createTypeormConn();
+    }
+  });
+
+  afterEach(async () => {
     await connection.close();
   });
 
   describe('Happy path', () => {
-    xtest('should return a user on creation', async () => {
+    test('should return a user on creation', async () => {
       const mutation = registerMutation(validEmail, validPassword);
       const { register } = (await request(host, mutation)) as {
         register: GQL.IRegisterResponse;
