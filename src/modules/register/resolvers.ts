@@ -1,6 +1,6 @@
+import * as yup from 'yup';
 import { User } from '../../entity/User';
 import { ResolverMap } from '../../types';
-import * as yup from 'yup';
 import { formatYupError } from '../../util/formatYupError';
 
 const schema = yup.object().shape({

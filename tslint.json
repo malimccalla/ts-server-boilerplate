@@ -3,9 +3,21 @@
   "extends": ["tslint:latest", "tslint-config-prettier"],
   "jsRules": {},
   "rules": {
-    "member-ordering": true,
+    "member-ordering": {
+      "options": [
+        {
+          "order": "statics-first"
+        }
+      ]
+    },
     "import-spacing": true,
-    "ordered-imports": false,
+    "ordered-imports": {
+      "options": [
+        {
+          "import-sources-order": "case-insensitive"
+        }
+      ]
+    },
     "object-literal-sort-keys": false,
     "no-console": [true, "debug", "info", "time", "timeEnd", "trace"],
     "interface-name": false,
