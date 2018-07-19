@@ -1,9 +1,10 @@
 import { gql } from 'apollo-server';
 import { request } from 'graphql-request';
-import { host } from '../../../constants';
+// import { host } from '../../../constants';
 import { createTypeormConn } from '../../../util/createTypeormConn';
-import { Connection } from 'typeorm';
+import { Connection, getConnection } from 'typeorm';
 import { User } from '../../../entity/User';
+import { startServer } from '../../../server';
 
 const registerMutation = (email: any, password: any) => gql`
     mutation {
@@ -22,6 +23,7 @@ const registerMutation = (email: any, password: any) => gql`
   `;
 
 describe('Register', () => {
+  let host: string;
   const validEmail = 'tester@mali.com';
   const validPassword = 'superS3Cr7t!';
 
@@ -30,16 +32,19 @@ describe('Register', () => {
 
   let connection: Connection;
 
-  beforeEach(async () => {
-    connection = await createTypeormConn();
+  beforeAll(async () => {
+    connection = getConnection('test');
+    // connection = await createTypeormConn();
+    const { port } = await startServer();
+    host = `http://127.0.0.1:${port}`;
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await connection.close();
   });
 
   describe('Happy path', () => {
-    test('should return a user on creation', async () => {
+    xtest('should return a user on creation', async () => {
       const mutation = registerMutation(validEmail, validPassword);
       const { register } = (await request(host, mutation)) as {
         register: GQL.IRegisterResponse;
