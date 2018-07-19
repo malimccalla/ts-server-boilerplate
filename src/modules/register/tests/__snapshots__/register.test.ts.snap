@@ -9,7 +9,7 @@ Array [
 ]
 `;
 
-exports[`Register Email validation should not duplicate emails 1`] = `
+exports[`Register Email validation should not allow duplicate emails 1`] = `
 Array [
   Object {
     "message": "Email already in use",

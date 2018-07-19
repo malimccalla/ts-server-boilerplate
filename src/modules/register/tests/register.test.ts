@@ -85,7 +85,7 @@ describe('Register', () => {
       expect(userCount).toBe(0);
     });
 
-    test('should not duplicate emails', async () => {
+    test('should not allow duplicate emails', async () => {
       const mutation = registerMutation(validEmail, validPassword);
       await request(host, mutation);
       const { register } = (await request(host, mutation)) as {
