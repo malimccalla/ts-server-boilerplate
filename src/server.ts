@@ -1,13 +1,19 @@
 import { ApolloServer } from 'apollo-server';
+import { GraphQLError } from 'graphql';
+import * as Redis from 'ioredis';
 
 import schema from './schema';
-import { GraphQLError } from 'graphql';
 import { createTypeormConn } from './util/createTypeormConn';
 
 export const startServer = async () => {
+  const redis = new Redis();
+
   const server = new ApolloServer({
     schema,
     formatError: (e: GraphQLError) => console.log(e),
+    context: {
+      redis,
+    },
   });
 
   const port = process.env.NODE_ENV === 'test' ? 0 : 4000;
