@@ -13,7 +13,7 @@ exports[`Register Email validation should not duplicate emails 1`] = `
 Array [
   Object {
     "message": "Email already in use",
-    "path": "Email",
+    "path": "email",
   },
 ]
 `;

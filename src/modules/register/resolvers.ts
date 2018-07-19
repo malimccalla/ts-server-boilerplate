@@ -40,7 +40,7 @@ const resolvers: ResolverMap = {
       if (userAlreadyExists) {
         return {
           ok: false,
-          errors: [{ path: 'Email', message: 'Email already in use' }],
+          errors: [{ path: 'email', message: 'Email already in use' }],
           user: null,
         };
       }

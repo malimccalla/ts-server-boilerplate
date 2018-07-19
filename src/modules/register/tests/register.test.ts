@@ -96,6 +96,7 @@ describe('Register', () => {
       expect(register.errors).toHaveLength(1);
       expect(register.errors).toMatchSnapshot();
 
+      expect(register.errors[0].path).toEqual('email');
       expect(register.errors[0].message).toEqual('Email already in use');
     });
   });
