@@ -9,9 +9,9 @@ import { createTypeormConn } from './util/createTypeormConn';
 
 export const startServer = async () => {
   const app = express();
-  const redis: Redis = new Redis();
+  const redis: Redis.Redis = new Redis();
 
-  const server = new ApolloServer({
+  const apolloServer = new ApolloServer({
     schema,
     formatError: (e: GraphQLError) => console.log(e),
     context: {
@@ -19,10 +19,12 @@ export const startServer = async () => {
     },
   });
 
+  apolloServer.applyMiddleware({ app });
+
   const port = process.env.NODE_ENV === 'test' ? 0 : 4000;
-
   const connection = await createTypeormConn();
-  const serverInfo = await server.console.log(`server listening at ${serverInfo.url}`);
-
-  return { serverInfo, connection };
+  // const serverInfo = await server.console.log(`server listening at ${serverInfo.url}`);
+  const server = await app.listen({ port });
+  console.log(`Server listening on port`, port);
+  return { connection, server };
 };
