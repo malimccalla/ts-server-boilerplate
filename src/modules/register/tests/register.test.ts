@@ -1,11 +1,10 @@
-import { gql } from 'apollo-server';
 import { request } from 'graphql-request';
 import { Connection } from 'typeorm';
 import { User } from '../../../entity/User';
 import { startServer } from '../../../server';
 import { createTypeormConn } from '../../../util/createTypeormConn';
 
-const registerMutation = (email: any, password: any) => gql`
+const registerMutation = (email: any, password: any) => `
   mutation {
     register(email: "${email}", password: "${password}") {
       ok
@@ -32,10 +31,10 @@ describe('Register', () => {
   const invalidPassword = 'pass123';
 
   beforeAll(async () => {
-    const res = await startServer();
-    connection = res.connection;
+    const server = await startServer();
+    connection = server.connection;
 
-    host = `http://127.0.0.1:${res.serverInfo.port}`;
+    host = `http://127.0.0.1:${server.port}`;
   });
 
   beforeEach(async () => {
