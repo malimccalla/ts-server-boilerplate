@@ -21,8 +21,6 @@ export const startServer = async () => {
     schema,
   });
 
-  server.applyMiddleware({ app, path: '/' });
-
   app.get('/confirm/:id', async (req, res) => {
     const { id } = req.params as { id: string };
     const userId = await redis.get(id);
@@ -33,6 +31,8 @@ export const startServer = async () => {
       res.status(500).send('invalid');
     }
   });
+
+  server.applyMiddleware({ app, path: '/' });
 
   const port = process.env.NODE_ENV === 'test' ? 8080 : 4000;
   const connection = await createTypeormConn();

@@ -10,5 +10,5 @@ export const createConfirmEmailLink = async (
   const id = v4();
   await redis.set(id, userId, 'ex', oneDay);
 
-  return `${url}/confirm/${id}`;
+  return { id, link: `${url}/confirm/${id}` };
 };
