@@ -51,6 +51,7 @@
   "jest": {
     "globalSetup": "./src/test/init.js",
     "globalTeardown": "./src/test/teardown.js",
+    "testEnvironment": "node",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
