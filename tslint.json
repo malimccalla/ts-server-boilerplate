@@ -3,13 +3,6 @@
   "extends": ["tslint:latest", "tslint-config-prettier"],
   "jsRules": {},
   "rules": {
-    "member-ordering": {
-      "options": [
-        {
-          "order": "statics-first"
-        }
-      ]
-    },
     "import-spacing": true,
     "ordered-imports": {
       "options": [
@@ -22,12 +15,37 @@
     "no-console": [true, "debug", "info", "time", "timeEnd", "trace"],
     "interface-name": false,
     "curly": false,
+    "ban-comma-operator": true,
+    "class-name": true,
+    "array-type": { "options": "array" },
+    "arrow-return-shorthand": true,
+    "eofline": true,
+    "indent": { "options": "spaces", "severity": "error" },
+    "match-default-export-name": true,
+    "max-line-length": { "options": 90 },
+    "adjacent-overload-signatures": true,
+    "newline-before-return": true,
     "member-access": false,
     "no-var-requires": false,
     "space-before-function-paren": false,
     "prefer-object-spread": true,
     "no-unused-expression": true,
     "prefer-const": true,
+    "typeof-compare": true,
+    "no-unnecessary-type-assertion": true,
+    "no-consecutive-blank-lines": true,
+    "no-construct": true,
+    "no-trailing-whitespace": true,
+    "use-isnan": true,
+    "triple-equals": true,
+    "unified-signatures": true,
+    "type-literal-delimiter": true,
+    "promise-function-async": true,
+    "number-literal-format": true,
+    "no-return-await": true,
+    "no-redundant-jsdoc": true,
+    "no-irregular-whitespace": true,
+    "quotemark": { "options": "single" },
     "prefer-for-of": true,
     "prefer-method-signature": true,
     "strict-type-predicates": true,

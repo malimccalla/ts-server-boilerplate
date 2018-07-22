@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 import { User } from '../../entity/User';
 import { ResolverMap } from '../../types';
+import { createConfirmEmailLink } from '../../util/createConfirmEmailLink';
 import { formatYupError } from '../../util/formatYupError';
 
 const schema = yup.object().shape({
@@ -19,7 +20,8 @@ const resolvers: ResolverMap = {
   Mutation: {
     register: async (
       _: any,
-      args: GQL.IRegisterOnMutationArguments
+      args: GQL.IRegisterOnMutationArguments,
+      { redis, url }
     ): Promise<GQL.IRegisterResponse> => {
       try {
         await schema.validate(args, { abortEarly: false });
@@ -48,10 +50,12 @@ const resolvers: ResolverMap = {
       const user = await User.create(args);
       await user.save();
 
+      await createConfirmEmailLink(url, user.id, redis);
+
       return {
         ok: true,
-        user,
         errors: [],
+        user,
       };
     },
   },

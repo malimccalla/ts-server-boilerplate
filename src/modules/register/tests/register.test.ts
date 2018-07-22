@@ -1,11 +1,12 @@
-import { gql } from 'apollo-server';
 import { request } from 'graphql-request';
-import { Connection } from 'typeorm';
 import { User } from '../../../entity/User';
-import { startServer } from '../../../server';
+
+import { closeTypeormConn } from '../../../test/closeTypeormConn';
 import { createTypeormConn } from '../../../util/createTypeormConn';
 
-const registerMutation = (email: any, password: any) => gql`
+const host = process.env.TEST_HOST as string;
+
+const registerMutation = (email: any, password: any) => `
   mutation {
     register(email: "${email}", password: "${password}") {
       ok
@@ -22,30 +23,18 @@ const registerMutation = (email: any, password: any) => gql`
 `;
 
 describe('Register', () => {
-  let host: string;
-  let connection: Connection;
-
   const validEmail = 'tester@mali.com';
   const validPassword = 'superS3Cr7t!';
 
   const invalidEmail = 'Invalid email';
   const invalidPassword = 'pass123';
 
-  beforeAll(async () => {
-    const res = await startServer();
-    connection = res.connection;
-
-    host = `http://127.0.0.1:${res.serverInfo.port}`;
-  });
-
   beforeEach(async () => {
-    if (!connection.isConnected) {
-      connection = await createTypeormConn();
-    }
+    await createTypeormConn();
   });
 
   afterEach(async () => {
-    await connection.close();
+    await closeTypeormConn();
   });
 
   describe('Happy path', () => {
