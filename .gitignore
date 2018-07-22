@@ -2,6 +2,7 @@
 .vscode/
 
 build/
+dump.rdb
 node_modules/
 temp/
 tmp/
