@@ -29,7 +29,7 @@ export const startServer = async () => {
       await redis.del(id);
       res.status(200).send('ok');
     } else {
-      res.status(500).send('invalid');
+      res.send('invalid');
     }
   });
 
