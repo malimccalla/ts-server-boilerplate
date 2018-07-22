@@ -3,13 +3,6 @@
   "extends": ["tslint:latest", "tslint-config-prettier"],
   "jsRules": {},
   "rules": {
-    "member-ordering": {
-      "options": [
-        {
-          "order": "statics-first"
-        }
-      ]
-    },
     "import-spacing": true,
     "ordered-imports": {
       "options": [
