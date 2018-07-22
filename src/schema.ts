@@ -1,8 +1,8 @@
-import * as path from 'path';
+import { makeExecutableSchema } from 'apollo-server';
 import * as fs from 'fs';
 import * as glob from 'glob';
-import { makeExecutableSchema } from 'apollo-server';
 import { mergeResolvers, mergeTypes } from 'merge-graphql-schemas';
+import * as path from 'path';
 
 const pathToModules = path.join(__dirname, './modules');
 

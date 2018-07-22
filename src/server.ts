@@ -3,27 +3,35 @@ import * as express from 'express';
 import { GraphQLError } from 'graphql';
 import * as Redis from 'ioredis';
 
+import { User } from './entity/User';
 import schema from './schema';
+import { Context } from './types';
 import { createTypeormConn } from './util/createTypeormConn';
 
 export const startServer = async () => {
   const app = express();
   const redis: Redis.Redis = new Redis();
 
-  const apolloServer = new ApolloServer({
-    schema,
-    formatError: (e: GraphQLError) => console.log(e),
-    context: {
+  const server = new ApolloServer({
+    context: ({ req }: { req: express.Request }): Context => ({
       redis,
-    },
+      url: `${req.protocol}://${req.get('host')}`,
+    }),
+    formatError: (e: GraphQLError) => console.log(e),
+    schema,
   });
 
-  apolloServer.applyMiddleware({ app, path: '/' });
+  server.applyMiddleware({ app, path: '/' });
 
-  app.get('/confirm', (_, res) => {
-    res.json({
-      confirm: true,
-    });
+  app.get('/confirm/:id', async (req, res) => {
+    const { id } = req.params as { id: string };
+    const userId = await redis.get(id);
+    if (userId) {
+      await User.update({ id: userId }, { confirmed: true });
+      res.status(200).send('ok');
+    } else {
+      res.status(500).send('invalid');
+    }
   });
 
   const port = process.env.NODE_ENV === 'test' ? 8080 : 4000;
@@ -32,5 +40,6 @@ export const startServer = async () => {
   await app.listen({ port });
 
   console.log(`Server listening on port`, port);
+
   return { connection, port };
 };
