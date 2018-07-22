@@ -1,8 +1,10 @@
 import { request } from 'graphql-request';
-import { Connection } from 'typeorm';
 import { User } from '../../../entity/User';
-import { startServer } from '../../../server';
+
+import { closeTypeormConn } from '../../../test/closeTypeormConn';
 import { createTypeormConn } from '../../../util/createTypeormConn';
+
+const host = process.env.TEST_HOST as string;
 
 const registerMutation = (email: any, password: any) => `
   mutation {
@@ -21,30 +23,18 @@ const registerMutation = (email: any, password: any) => `
 `;
 
 describe('Register', () => {
-  let host: string;
-  let connection: Connection;
-
   const validEmail = 'tester@mali.com';
   const validPassword = 'superS3Cr7t!';
 
   const invalidEmail = 'Invalid email';
   const invalidPassword = 'pass123';
 
-  beforeAll(async () => {
-    const server = await startServer();
-    connection = server.connection;
-
-    host = `http://127.0.0.1:${server.port}`;
-  });
-
   beforeEach(async () => {
-    if (!connection.isConnected) {
-      connection = await createTypeormConn();
-    }
+    await createTypeormConn();
   });
 
   afterEach(async () => {
-    await connection.close();
+    await closeTypeormConn();
   });
 
   describe('Happy path', () => {
