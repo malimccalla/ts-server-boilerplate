@@ -1,23 +1,25 @@
 import axios from 'axios';
+import * as faker from 'faker';
+import { Connection } from 'typeorm';
 
 import { User } from '../../entity/User';
 import { redis } from '../../services/redis';
-import { closeTypeormConn } from '../../test/closeTypeormConn';
+import { createTestConn } from '../../test/createTestConn';
 import { createConfirmEmailLink } from '../../util/createConfirmEmailLink';
-import { createTypeormConn } from '../../util/createTypeormConn';
 
 const host = process.env.TEST_HOST as string;
 
 describe('/confirm/:id', () => {
   let userId: string;
   let confirmation: { id: string; link: string };
+  let conn: Connection;
 
   beforeEach(async () => {
-    await createTypeormConn();
+    conn = await createTestConn();
 
     const user = await User.create({
-      email: 'email@email.com',
-      password: 'password123',
+      email: faker.internet.email(),
+      password: faker.internet.password(10),
     }).save();
 
     userId = user.id;
@@ -26,7 +28,7 @@ describe('/confirm/:id', () => {
   });
 
   afterEach(async () => {
-    await closeTypeormConn();
+    await conn.close();
   });
 
   test('should respond with "ok" and confirm user on sending link request', async () => {

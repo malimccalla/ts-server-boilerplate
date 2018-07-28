@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login should not login a user without email confirmation 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "message": "Please confirm your email address",
+      "path": "email",
+    },
+  ],
+  "ok": false,
+  "user": null,
+}
+`;
