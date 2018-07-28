@@ -32,15 +32,15 @@ describe('Register', () => {
   const invalidEmail = 'Invalid email';
   const invalidPassword = 'pass123';
 
-  beforeEach(async () => {
-    await createTypeormConn();
-  });
-
-  afterEach(async () => {
-    await closeTypeormConn();
-  });
-
   describe('Happy path', () => {
+    beforeEach(async () => {
+      await createTypeormConn();
+    });
+
+    afterEach(async () => {
+      await closeTypeormConn();
+    });
+
     test('should return a user on creation', async () => {
       const mutation = registerMutation(validEmail, validPassword);
       const { register } = (await request(host, mutation)) as {
@@ -58,9 +58,25 @@ describe('Register', () => {
       // check password has been hashed
       expect(user!.password).not.toEqual(validPassword);
     });
+
+    test('user should not be confirmed on creation', async () => {
+      const mutation = registerMutation(validEmail, validPassword);
+      await request(host, mutation);
+
+      const user = await User.findOne({ where: { email: validEmail } });
+      expect(user!.confirmed).toBe(false);
+    });
   });
 
   describe('Email validation', () => {
+    beforeEach(async () => {
+      await createTypeormConn();
+    });
+
+    afterEach(async () => {
+      await closeTypeormConn();
+    });
+
     test('should not allow an invalid email', async () => {
       const mutation = registerMutation(invalidEmail, validPassword);
       const { register } = (await request(host, mutation)) as {
@@ -94,6 +110,14 @@ describe('Register', () => {
   });
 
   describe('Password validation', () => {
+    beforeEach(async () => {
+      await createTypeormConn();
+    });
+
+    afterEach(async () => {
+      await closeTypeormConn();
+    });
+
     test('should not allow a password less than 8 characters', async () => {
       const mutation = registerMutation(validEmail, invalidPassword);
       const { register } = (await request(host, mutation)) as {
