@@ -54,4 +54,44 @@ describe('Login', () => {
     expect(res.login.ok).toBe(false);
     expect(res.login).toMatchSnapshot();
   });
+
+  test('should not login a user with a bad email', async () => {
+    const email = faker.internet.email();
+    const password = faker.internet.password(10);
+
+    const register = registerMutation(email, password);
+    await request(host, register);
+
+    // Manually confirm the users email address
+    await User.update({ email }, { confirmed: true });
+
+    const login = loginMutation('wrong@email.com', password);
+    const res = (await request(host, login)) as {
+      login: GQL.ILoginResponse;
+    };
+
+    expect(res.login.ok).toBe(false);
+    expect(res.login.errors[0].path).toEqual('email');
+    expect(res.login).toMatchSnapshot();
+  });
+
+  test('should not login a user with a bad password', async () => {
+    const email = faker.internet.email();
+    const password = faker.internet.password(10);
+
+    const register = registerMutation(email, password);
+    await request(host, register);
+
+    // Manually confirm the users email address
+    await User.update({ email }, { confirmed: true });
+
+    const login = loginMutation(email, 'wrong');
+    const res = (await request(host, login)) as {
+      login: GQL.ILoginResponse;
+    };
+
+    expect(res.login.ok).toBe(false);
+    expect(res.login.errors[0].path).toEqual('password');
+    expect(res.login).toMatchSnapshot();
+  });
 });

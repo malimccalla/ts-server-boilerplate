@@ -9,24 +9,20 @@ const resolvers: ResolverMap = {
       _: any,
       { email, password }: GQL.ILoginOnMutationArguments
     ): Promise<GQL.ILoginResponse> => {
-      const errorResponse: GQL.ILoginResponse = {
+      const errorResponse = (path: string, message: string): GQL.ILoginResponse => ({
         ok: false,
-        errors: [{ path: 'login', message: 'Invalid credentials' }],
+        errors: [{ path, message }],
         user: null,
-      };
+      });
 
       const user = await User.findOne({ where: { email } });
-      if (!user) return errorResponse;
+      if (!user) return errorResponse('email', 'Invalid credentials');
 
       const valid = await bcrypt.compare(password, user.password);
-      if (!valid) return errorResponse;
+      if (!valid) return errorResponse('password', 'Invalid credentials');
 
       if (!user.confirmed) {
-        return {
-          ok: false,
-          errors: [{ message: 'Please confirm your email address', path: 'email' }],
-          user: null,
-        };
+        return errorResponse('email', 'Please confirm your email address');
       }
 
       // exist in database and have given correct credentials

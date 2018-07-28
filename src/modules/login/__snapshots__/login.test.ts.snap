@@ -1,5 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Login should not login a user with a bad email 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "message": "Invalid credentials",
+      "path": "email",
+    },
+  ],
+  "ok": false,
+  "user": null,
+}
+`;
+
+exports[`Login should not login a user with a bad password 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "message": "Invalid credentials",
+      "path": "password",
+    },
+  ],
+  "ok": false,
+  "user": null,
+}
+`;
+
 exports[`Login should not login a user without email confirmation 1`] = `
 Object {
   "errors": Array [
