@@ -1,44 +1,30 @@
-import { gql } from 'apollo-server';
-import { print } from 'graphql';
+import * as faker from 'faker';
 import { request } from 'graphql-request';
+import { Connection } from 'typeorm';
 
 import { User } from '../../../entity/User';
-import { closeTypeormConn } from '../../../test/closeTypeormConn';
-import { createTypeormConn } from '../../../util/createTypeormConn';
+import { registerMutation } from '../../../test/ast';
+import { createTestConn } from '../../../test/createTestConn';
 
 const host = process.env.TEST_HOST as string;
-
-const registerMutation = (email: any, password: any) =>
-  print(gql`
-  mutation {
-    register(email: "${email}", password: "${password}") {
-      ok
-      user {
-        id
-        email
-      }
-      errors {
-        path
-        message
-      }
-    }
-  }
-`);
+faker.seed(Date.now() + Math.random());
 
 describe('Register', () => {
-  const validEmail = 'tester@mali.com';
-  const validPassword = 'superS3Cr7t!';
+  const validEmail = faker.internet.email();
+  const validPassword = faker.internet.password(10);
 
   const invalidEmail = 'Invalid email';
-  const invalidPassword = 'pass123';
+  const invalidPassword = faker.internet.password(5);
 
   describe('Happy path', () => {
+    let conn: Connection;
+
     beforeEach(async () => {
-      await createTypeormConn();
+      conn = await createTestConn();
     });
 
     afterEach(async () => {
-      await closeTypeormConn();
+      await conn.close();
     });
 
     test('should return a user on creation', async () => {
@@ -48,12 +34,10 @@ describe('Register', () => {
       };
 
       const user = await User.findOne({ where: { email: validEmail } });
-      const userCount = await User.count();
 
       expect(register.ok).toBe(true);
       expect(register.user).toBeTruthy();
       expect(register.user!.email).toEqual(validEmail);
-      expect(userCount).toBe(1);
 
       // check password has been hashed
       expect(user!.password).not.toEqual(validPassword);
@@ -69,12 +53,14 @@ describe('Register', () => {
   });
 
   describe('Email validation', () => {
+    let conn: Connection;
+
     beforeEach(async () => {
-      await createTypeormConn();
+      conn = await createTestConn();
     });
 
     afterEach(async () => {
-      await closeTypeormConn();
+      await conn.close();
     });
 
     test('should not allow an invalid email', async () => {
@@ -83,14 +69,10 @@ describe('Register', () => {
         register: GQL.IRegisterResponse;
       };
 
-      const userCount = await User.count();
-
       expect(register.ok).toBe(false);
       expect(register.errors).toHaveLength(1);
       expect(register.user).toBeFalsy();
       expect(register.errors).toMatchSnapshot();
-
-      expect(userCount).toBe(0);
     });
 
     test('should not allow duplicate emails', async () => {
@@ -110,12 +92,14 @@ describe('Register', () => {
   });
 
   describe('Password validation', () => {
+    let conn: Connection;
+
     beforeEach(async () => {
-      await createTypeormConn();
+      conn = await createTestConn();
     });
 
     afterEach(async () => {
-      await closeTypeormConn();
+      await conn.close();
     });
 
     test('should not allow a password less than 8 characters', async () => {
@@ -124,14 +108,10 @@ describe('Register', () => {
         register: GQL.IRegisterResponse;
       };
 
-      const userCount = await User.count();
-
       expect(register.ok).toBe(false);
       expect(register.errors).toHaveLength(1);
       expect(register.user).toBeFalsy();
       expect(register.errors).toMatchSnapshot();
-
-      expect(userCount).toBe(0);
     });
   });
 });

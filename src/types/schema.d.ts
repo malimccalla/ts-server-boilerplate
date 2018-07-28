@@ -29,7 +29,13 @@ declare namespace GQL {
   }
 
   interface IMutation {
+    login: ILoginResponse | null;
     register: IRegisterResponse;
+  }
+
+  interface ILoginOnMutationArguments {
+    email: string;
+    password: string;
   }
 
   interface IRegisterOnMutationArguments {
@@ -37,7 +43,7 @@ declare namespace GQL {
     password: string;
   }
 
-  interface IRegisterResponse {
+  interface ILoginResponse {
     ok: boolean;
     user: IUser | null;
     errors: Array<IError>;
@@ -51,6 +57,12 @@ declare namespace GQL {
   interface IError {
     path: string;
     message: string;
+  }
+
+  interface IRegisterResponse {
+    ok: boolean;
+    user: IUser | null;
+    errors: Array<IError>;
   }
 }
 
