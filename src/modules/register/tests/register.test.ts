@@ -1,12 +1,15 @@
+import { gql } from 'apollo-server';
+import { print } from 'graphql';
 import { request } from 'graphql-request';
-import { User } from '../../../entity/User';
 
+import { User } from '../../../entity/User';
 import { closeTypeormConn } from '../../../test/closeTypeormConn';
 import { createTypeormConn } from '../../../util/createTypeormConn';
 
 const host = process.env.TEST_HOST as string;
 
-const registerMutation = (email: any, password: any) => `
+const registerMutation = (email: any, password: any) =>
+  print(gql`
   mutation {
     register(email: "${email}", password: "${password}") {
       ok
@@ -20,7 +23,7 @@ const registerMutation = (email: any, password: any) => `
       }
     }
   }
-`;
+`);
 
 describe('Register', () => {
   const validEmail = 'tester@mali.com';

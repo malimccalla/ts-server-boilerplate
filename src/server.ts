@@ -1,16 +1,15 @@
 import { ApolloServer } from 'apollo-server-express';
 import * as express from 'express';
 import { GraphQLError } from 'graphql';
-import * as Redis from 'ioredis';
 
-import { User } from './entity/User';
+import { confirmEmail } from './routes/confirmEmail';
 import schema from './schema';
+import { redis } from './services/redis';
 import { Context } from './types';
 import { createTypeormConn } from './util/createTypeormConn';
 
 export const startServer = async () => {
   const app = express();
-  const redis: Redis.Redis = new Redis();
 
   const server = new ApolloServer({
     context: ({ req }: { req: express.Request }): Context => ({
@@ -21,17 +20,7 @@ export const startServer = async () => {
     schema,
   });
 
-  app.get('/confirm/:id', async (req, res) => {
-    const { id } = req.params as { id: string };
-    const userId = await redis.get(id);
-    if (userId) {
-      await User.update({ id: userId }, { confirmed: true });
-      await redis.del(id);
-      res.status(200).send('ok');
-    } else {
-      res.send('invalid');
-    }
-  });
+  app.get('/confirm/:id', confirmEmail);
 
   server.applyMiddleware({ app, path: '/' });
 
