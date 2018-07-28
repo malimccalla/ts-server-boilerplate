@@ -7,6 +7,7 @@ import { registerMutation } from '../../../test/ast';
 import { createTestConn } from '../../../test/createTestConn';
 
 const host = process.env.TEST_HOST as string;
+faker.seed(Date.now() + Math.random());
 
 describe('Register', () => {
   const validEmail = faker.internet.email();

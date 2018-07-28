@@ -8,6 +8,7 @@ import { createTestConn } from '../../test/createTestConn';
 import { createConfirmEmailLink } from '../../util/createConfirmEmailLink';
 
 const host = process.env.TEST_HOST as string;
+faker.seed(Date.now() + Math.random());
 
 describe('/confirm/:id', () => {
   let userId: string;

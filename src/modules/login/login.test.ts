@@ -2,12 +2,12 @@ import * as faker from 'faker';
 import { request } from 'graphql-request';
 import { Connection } from 'typeorm';
 
-import { loginMutation, registerMutation } from '../../test/ast';
-
 import { User } from '../../entity/User';
+import { loginMutation, registerMutation } from '../../test/ast';
 import { createTestConn } from '../../test/createTestConn';
 
 const host = process.env.TEST_HOST as string;
+faker.seed(Date.now() + Math.random());
 
 describe('Login', () => {
   let conn: Connection;
