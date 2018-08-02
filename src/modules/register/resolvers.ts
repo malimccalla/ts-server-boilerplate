@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+
 import { User } from '../../entity/User';
 import { ResolverMap } from '../../types';
 import { createConfirmEmailLink } from '../../util/createConfirmEmailLink';
@@ -21,7 +22,7 @@ const resolvers: ResolverMap = {
     register: async (
       _: any,
       args: GQL.IRegisterOnMutationArguments,
-      { redis, url }
+      { redis, req }
     ): Promise<GQL.IRegisterResponse> => {
       try {
         await schema.validate(args, { abortEarly: false });
@@ -50,7 +51,13 @@ const resolvers: ResolverMap = {
       const user = await User.create(args);
       await user.save();
 
-      await createConfirmEmailLink(url, user.id, redis);
+      await createConfirmEmailLink(
+        `${req.protocol}://${req.get('host')}`,
+        user.id,
+        redis
+      );
+
+      req.session!.userId = user.id;
 
       return {
         ok: true,
