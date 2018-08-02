@@ -3,7 +3,6 @@ import { Redis } from 'ioredis';
 
 export interface Context {
   redis: Redis;
-  url: string;
   req: Request;
 }
 

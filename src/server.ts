@@ -24,7 +24,6 @@ export const startServer = async () => {
     context: ({ req }: { req: express.Request }): Context => ({
       redis,
       req,
-      url: `${req.protocol}://${req.get('host')}`,
     }),
     formatError: (e: GraphQLError) => console.log(e),
     schema,
