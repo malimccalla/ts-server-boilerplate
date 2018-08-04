@@ -10,6 +10,14 @@ export interface Session {
   userId?: string;
 }
 
+export type GraphQLMiddlewareFunc = (
+  resolver: Resolver,
+  parent: any,
+  args: any,
+  context: Context,
+  info: any
+) => any;
+
 export type Resolver = (parent: any, args: any, context: Context, info: any) => any;
 
 export interface ResolverMap {
