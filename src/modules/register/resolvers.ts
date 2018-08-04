@@ -57,8 +57,6 @@ const resolvers: ResolverMap = {
         redis
       );
 
-      req.session!.userId = user.id;
-
       return {
         ok: true,
         errors: [],
