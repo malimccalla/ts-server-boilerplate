@@ -29,6 +29,8 @@ export const startServer = async () => {
     schema,
   });
 
+  const sessionSecret = process.env.SESSION_SECRET as string;
+
   app.get('/confirm/:id', confirmEmail);
 
   app.use(
@@ -36,7 +38,7 @@ export const startServer = async () => {
       store: new RedisStore({}),
       resave: true,
       name: 'qid',
-      secret: 'secret',
+      secret: sessionSecret,
       saveUninitialized: false,
       cookie: {
         httpOnly: true,
