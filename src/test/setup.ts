@@ -1,5 +1,7 @@
 import { startServer } from '../server';
 
+require('dotenv').config();
+
 export const setup = async () => {
   const { port } = await startServer();
 

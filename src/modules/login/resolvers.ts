@@ -8,7 +8,7 @@ const resolvers: ResolverMap = {
     login: async (
       _: any,
       { email, password }: GQL.ILoginOnMutationArguments,
-      { req }
+      { session }
     ): Promise<GQL.ILoginResponse> => {
       const errorResponse = (path: string, message: string): GQL.ILoginResponse => ({
         ok: false,
@@ -26,7 +26,7 @@ const resolvers: ResolverMap = {
         return errorResponse('email', 'Please confirm your email address');
       }
 
-      req.session!.userId = user.id;
+      session.userId = user.id;
 
       // exist in database and have given correct credentials
       return {

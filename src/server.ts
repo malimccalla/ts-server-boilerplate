@@ -11,7 +11,7 @@ import { confirmEmail } from './routes/confirmEmail';
 import schema from './schema';
 import { redis } from './services/redis';
 import { createTestConn } from './test/createTestConn';
-import { Context } from './types';
+import { Context, Session } from './types';
 import { createTypeormConn } from './util/createTypeormConn';
 
 export const startServer = async () => {
@@ -23,7 +23,8 @@ export const startServer = async () => {
   const server = new ApolloServer({
     context: ({ req }: { req: express.Request }): Context => ({
       redis,
-      req,
+      session: req.session as Session,
+      url: `${req.protocol}://${req.get('host')}`,
     }),
     formatError: (e: GraphQLError) => console.log(e),
     schema,

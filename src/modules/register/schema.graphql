@@ -7,8 +7,3 @@ type RegisterResponse {
   user: User
   errors: [Error!]
 }
-
-type User {
-  email: String
-  id: String!
-}
