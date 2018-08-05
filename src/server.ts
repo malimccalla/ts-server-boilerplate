@@ -38,8 +38,6 @@ export const startServer = async () => {
 
   const sessionSecret = process.env.SESSION_SECRET as string;
 
-  app.use(cors({ credentials: true, origin: '*' }));
-
   app.use(
     session({
       store: new RedisStore({}),
@@ -54,6 +52,8 @@ export const startServer = async () => {
       },
     })
   );
+
+  app.use(cors({ credentials: true, origin: '*' }));
 
   app.get('/confirm/:id', confirmEmail);
 

@@ -26,10 +26,9 @@ const resolvers: ResolverMap = {
         return errorResponse('email', 'Please confirm your email address');
       }
 
+      // login successful
       session.userId = user.id;
-      console.log('set session', session);
 
-      // exist in database and have given correct credentials
       return {
         ok: true,
         errors: [],

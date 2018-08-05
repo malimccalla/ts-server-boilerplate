@@ -37,11 +37,13 @@ describe('me', () => {
   });
 
   test('get the current user', async () => {
-    await axios.post(
+    const res = await axios.post(
       host,
       { query: loginMutation(email, password) },
       { withCredentials: true } // saves cookie
     );
+
+    console.log('login in', res);
 
     const response = await axios.post(
       host,
