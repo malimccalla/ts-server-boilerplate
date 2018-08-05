@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 
+import { userSessionIdPrefix } from '../../constants';
 import { User } from '../../entity/User';
 import { ResolverMap } from '../../types';
 
@@ -28,7 +29,9 @@ const resolvers: ResolverMap = {
 
       // login successful
       session.userId = user.id;
-      await redis.lpush(user.id, req.sessionID);
+      if (req.sessionID) {
+        await redis.lpush(`${userSessionIdPrefix}${user.id}`, req.sessionID);
+      }
 
       return {
         ok: true,
