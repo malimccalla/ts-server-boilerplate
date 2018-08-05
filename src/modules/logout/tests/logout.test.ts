@@ -1,3 +1,4 @@
+import * as faker from 'faker';
 import { Connection } from 'typeorm';
 
 import { User } from '../../../entity/User';
@@ -5,10 +6,11 @@ import { createTestConn } from '../../../test/createTestConn';
 import { TestClient } from '../../../test/TestClient';
 
 const host = process.env.TEST_HOST as string;
+faker.seed(Date.now() + Math.random());
 
 describe('logout', () => {
-  const email = 'cookie2@email.com';
-  const password = 'password123';
+  const email = faker.internet.email();
+  const password = faker.internet.password();
   let conn: Connection;
 
   beforeEach(async () => {
@@ -36,9 +38,7 @@ describe('logout', () => {
     const res = await client.logout();
     const res2 = await client.me();
 
-    expect(res.data).toBe(true);
-    expect(res2.data.me).not.toHaveProperty('email');
-    expect(res2.data.me).not.toHaveProperty('id');
+    expect(res.data.logout).toBe(true);
     expect(res2.data.me).toBeNull();
   });
 });

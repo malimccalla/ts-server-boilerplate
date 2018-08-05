@@ -1,3 +1,4 @@
+import * as faker from 'faker';
 import { Connection } from 'typeorm';
 
 import { User } from '../../../entity/User';
@@ -5,10 +6,11 @@ import { createTestConn } from '../../../test/createTestConn';
 import { TestClient } from '../../../test/TestClient';
 
 const host = process.env.TEST_HOST as string;
+faker.seed(Date.now() + Math.random());
 
 describe('me', () => {
-  const email = 'cookie@email.com';
-  const password = 'password123';
+  const email = faker.internet.email();
+  const password = faker.internet.password(10);
   let conn: Connection;
 
   beforeEach(async () => {
@@ -38,7 +40,7 @@ describe('me', () => {
 
     const res = await client.me();
 
-    expect(res.data).toMatchSnapshot();
+    expect(res.data.me).toHaveProperty('id');
     expect(res.data.me.email).toEqual(email);
   });
 });
