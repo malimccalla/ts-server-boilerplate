@@ -36,6 +36,7 @@ declare namespace GQL {
 
   interface IMutation {
     login: ILoginResponse;
+    logout: boolean | null;
     register: IRegisterResponse;
   }
 
