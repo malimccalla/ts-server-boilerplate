@@ -1,10 +1,9 @@
 import * as faker from 'faker';
-import { request } from 'graphql-request';
 import { Connection } from 'typeorm';
 
 import { User } from '../../../entity/User';
-import { registerMutation } from '../../../test/ast';
 import { createTestConn } from '../../../test/createTestConn';
+import { TestClient } from '../../../test/TestClient';
 
 const host = process.env.TEST_HOST as string;
 faker.seed(Date.now() + Math.random());
@@ -13,7 +12,7 @@ describe('Register', () => {
   const validEmail = faker.internet.email();
   const validPassword = faker.internet.password(10);
 
-  const invalidEmail = 'Invalid email';
+  const invalidEmail = 'Invalid@email';
   const invalidPassword = faker.internet.password(5);
 
   describe('Happy path', () => {
@@ -28,24 +27,22 @@ describe('Register', () => {
     });
 
     test('should return a user on creation', async () => {
-      const mutation = registerMutation(validEmail, validPassword);
-      const { register } = (await request(host, mutation)) as {
-        register: GQL.IRegisterResponse;
-      };
+      const client = new TestClient(host);
+      const { data } = await client.register(validEmail, validPassword);
 
       const user = await User.findOne({ where: { email: validEmail } });
 
-      expect(register.ok).toBe(true);
-      expect(register.user).toBeTruthy();
-      expect(register.user!.email).toEqual(validEmail);
+      expect(data.register.ok).toBe(true);
+      expect(data.register.user).toBeTruthy();
+      expect(data.register.user!.email).toEqual(validEmail);
 
       // check password has been hashed
       expect(user!.password).not.toEqual(validPassword);
     });
 
     test('user should not be confirmed on creation', async () => {
-      const mutation = registerMutation(validEmail, validPassword);
-      await request(host, mutation);
+      const client = new TestClient(host);
+      await client.register(validEmail, validPassword);
 
       const user = await User.findOne({ where: { email: validEmail } });
       expect(user!.confirmed).toBe(false);
@@ -64,30 +61,25 @@ describe('Register', () => {
     });
 
     test('should not allow an invalid email', async () => {
-      const mutation = registerMutation(invalidEmail, validPassword);
-      const { register } = (await request(host, mutation)) as {
-        register: GQL.IRegisterResponse;
-      };
+      const client = new TestClient(host);
+      const { data } = await client.register(invalidEmail, validPassword);
 
-      expect(register.ok).toBe(false);
-      expect(register.errors).toHaveLength(1);
-      expect(register.user).toBeFalsy();
-      expect(register.errors).toMatchSnapshot();
+      expect(data.register.ok).toBe(false);
+      expect(data.register.errors).toHaveLength(1);
+      expect(data.register.user).toBeFalsy();
+      expect(data.register.errors).toMatchSnapshot();
     });
 
     test('should not allow duplicate emails', async () => {
-      const mutation = registerMutation(validEmail, validPassword);
-      await request(host, mutation);
-      const { register } = (await request(host, mutation)) as {
-        register: GQL.IRegisterResponse;
-      };
+      const client = new TestClient(host);
+      const { data } = await client.register(validEmail, validPassword);
 
-      expect(register.ok).toBe(false);
-      expect(register.errors).toHaveLength(1);
-      expect(register.errors).toMatchSnapshot();
+      expect(data.register.ok).toBe(false);
+      expect(data.register.errors).toHaveLength(1);
+      expect(data.register.errors).toMatchSnapshot();
 
-      expect(register.errors[0].path).toEqual('email');
-      expect(register.errors[0].message).toEqual('Email already in use');
+      expect(data.register.errors[0].path).toEqual('email');
+      expect(data.register.errors[0].message).toEqual('Email already in use');
     });
   });
 
@@ -103,15 +95,13 @@ describe('Register', () => {
     });
 
     test('should not allow a password less than 8 characters', async () => {
-      const mutation = registerMutation(validEmail, invalidPassword);
-      const { register } = (await request(host, mutation)) as {
-        register: GQL.IRegisterResponse;
-      };
+      const client = new TestClient(host);
+      const { data } = await client.register(validEmail, invalidPassword);
 
-      expect(register.ok).toBe(false);
-      expect(register.errors).toHaveLength(1);
-      expect(register.user).toBeFalsy();
-      expect(register.errors).toMatchSnapshot();
+      expect(data.register.ok).toBe(false);
+      expect(data.register.errors).toHaveLength(1);
+      expect(data.register.user).toBeFalsy();
+      expect(data.register.errors).toMatchSnapshot();
     });
   });
 });

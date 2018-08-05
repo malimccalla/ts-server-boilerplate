@@ -1,3 +1,5 @@
 import { startServer } from './server';
 
-startServer();
+startServer().then(res => {
+  console.log('Server listening on port', res.port);
+});

@@ -22,7 +22,7 @@ const resolvers: ResolverMap = {
     register: async (
       _: any,
       args: GQL.IRegisterOnMutationArguments,
-      { redis, req }
+      { redis, url }
     ): Promise<GQL.IRegisterResponse> => {
       try {
         await schema.validate(args, { abortEarly: false });
@@ -51,13 +51,7 @@ const resolvers: ResolverMap = {
       const user = await User.create(args);
       await user.save();
 
-      await createConfirmEmailLink(
-        `${req.protocol}://${req.get('host')}`,
-        user.id,
-        redis
-      );
-
-      req.session!.userId = user.id;
+      await createConfirmEmailLink(url, user.id, redis);
 
       return {
         ok: true,
