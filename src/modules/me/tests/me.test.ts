@@ -1,9 +1,8 @@
-import axios from 'axios';
 import { Connection } from 'typeorm';
 
 import { User } from '../../../entity/User';
-import { loginMutation, meQuery } from '../../../test/ast';
 import { createTestConn } from '../../../test/createTestConn';
+import { TestClient } from '../../../test/TestClient';
 
 const host = process.env.TEST_HOST as string;
 
@@ -27,25 +26,19 @@ describe('me', () => {
   });
 
   test('should return null if no cookie', async () => {
-    const response = await axios.post(host, { query: meQuery });
+    const client = new TestClient(host);
+    const response = await client.me();
 
-    expect(response.data.data.me).toBeNull();
+    expect(response.data.me).toBeNull();
   });
 
-  // toto: Find out why cookie is not being persisted
-  xtest('get the current user', async () => {
-    await axios.post(
-      host,
-      { query: loginMutation(email, password) },
-      { withCredentials: true } // saves cookie
-    );
+  test('get the current user', async () => {
+    const client = new TestClient(host);
+    await client.login(email, password);
 
-    const response = await axios.post(
-      host,
-      { query: meQuery },
-      { withCredentials: true } // sends cookie
-    );
+    const res = await client.me();
 
-    expect(response.data.data.me).toBeTruthy();
+    expect(res.data).toMatchSnapshot();
+    expect(res.data.me.email).toEqual(email);
   });
 });

@@ -22,21 +22,21 @@ export class TestClient {
   async me() {
     return rp.post(this.url, {
       ...this.options,
-      body: meQuery,
+      body: { query: meQuery },
     });
   }
 
   async login(email: string, password: string) {
     return rp.post(this.url, {
       ...this.options,
-      body: loginMutation(email, password),
+      body: { query: loginMutation(email, password) },
     });
   }
 
   async logout() {
     return rp.post(this.url, {
       ...this.options,
-      body: logout,
+      body: { query: logout },
     });
   }
 }

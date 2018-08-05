@@ -2,6 +2,9 @@
 
 exports[`me get the current user 1`] = `
 Object {
-  "me": null,
+  "me": Object {
+    "email": "cookie@email.com",
+    "id": "d33602aa-893d-4cbc-8061-c359b84891f5",
+  },
 }
 `;
