@@ -7,8 +7,6 @@ export default async (
   context: Context,
   info: any
 ) => {
-  console.log('CONTEXT', context.session);
-
   // middleware
   const result = await resolver(parent, args, context, info);
   // afterware
