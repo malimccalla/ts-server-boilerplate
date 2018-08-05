@@ -27,32 +27,26 @@ describe('me', () => {
   });
 
   test('should return null if no cookie', async () => {
-    const response = await axios.post(
-      host,
-      { query: meQuery },
-      { withCredentials: false }
-    );
+    const response = await axios.post(host, { query: meQuery });
 
     expect(response.data.data.me).toBeNull();
   });
 
   test('get the current user', async () => {
-    const res = await axios.post(
+    await axios.post(
       host,
       { query: loginMutation(email, password) },
       { withCredentials: true } // saves cookie
     );
 
-    console.log('login in', res);
-
     const response = await axios.post(
       host,
       { query: meQuery },
-      { withCredentials: true }
+      { withCredentials: true } // sends cookie
     );
 
     console.log('ME: ', response.data);
 
-    expect(response.data.data).toMatchSnapshot();
+    expect(response.data.data.me).toBeTruthy();
   });
 });
