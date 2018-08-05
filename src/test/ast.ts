@@ -43,3 +43,9 @@ export const meQuery = print(gql`
     }
   }
 `);
+
+export const logout = print(gql`
+  mutation {
+    logout
+  }
+`);

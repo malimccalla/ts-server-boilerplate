@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@types/cors": "^2.8.4",
+    "@types/request-promise": "^4.1.42",
     "apollo-server": "2.0.0",
     "apollo-server-express": "^2.0.0",
     "axios": "^0.18.0",
@@ -46,6 +47,7 @@
     "merge-graphql-schemas": "^1.5.1",
     "pg": "^7.4.3",
     "reflect-metadata": "^0.1.10",
+    "request-promise": "^4.2.2",
     "typeorm": "^0.2.6",
     "uuid": "^3.3.2",
     "yup": "^0.25.1"
