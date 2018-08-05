@@ -26,9 +26,15 @@ describe('me', () => {
     await conn.close();
   });
 
-  // xtest('should not return user if not logged in', async () => {
+  test('should return null if no cookie', async () => {
+    const response = await axios.post(
+      host,
+      { query: meQuery },
+      { withCredentials: false }
+    );
 
-  // });
+    expect(response.data.data.me).toBeNull();
+  });
 
   test('get the current user', async () => {
     await axios.post(
@@ -42,6 +48,8 @@ describe('me', () => {
       { query: meQuery },
       { withCredentials: true }
     );
+
+    console.log('ME: ', response.data);
 
     expect(response.data.data).toMatchSnapshot();
   });

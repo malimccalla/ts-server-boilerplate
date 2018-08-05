@@ -1,7 +1,9 @@
+import 'dotenv/config';
 import 'reflect-metadata';
 
 import { ApolloServer } from 'apollo-server-express';
 import * as connectRedis from 'connect-redis';
+import * as cors from 'cors';
 import * as express from 'express';
 import * as session from 'express-session';
 import { GraphQLError } from 'graphql';
@@ -15,6 +17,10 @@ import { Context, Session } from './types';
 import { createTypeormConn } from './util/createTypeormConn';
 
 export const startServer = async () => {
+  if (process.env.NODE_ENV === 'test') {
+    await redis.flushall();
+  }
+
   const app = express();
   const RedisStore = connectRedis(session);
   let connection: Connection;
@@ -31,6 +37,8 @@ export const startServer = async () => {
   });
 
   const sessionSecret = process.env.SESSION_SECRET as string;
+
+  app.use(cors({ credentials: true, origin: '*' }));
 
   app.use(
     session({

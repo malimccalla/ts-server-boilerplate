@@ -25,6 +25,7 @@
     "max-line-length": { "options": 90 },
     "adjacent-overload-signatures": true,
     "newline-before-return": true,
+    "no-submodule-imports": false,
     "member-access": false,
     "no-var-requires": false,
     "space-before-function-paren": false,

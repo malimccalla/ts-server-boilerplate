@@ -27,6 +27,7 @@ const resolvers: ResolverMap = {
       }
 
       session.userId = user.id;
+      console.log('set session', session);
 
       // exist in database and have given correct credentials
       return {

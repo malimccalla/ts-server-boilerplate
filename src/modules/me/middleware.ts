@@ -1,13 +1,13 @@
-import { Resolver } from '../../types';
+import { Context, Resolver } from '../../types';
 
 export default async (
   resolver: Resolver,
   parent: any,
   args: any,
-  context: any,
+  context: Context,
   info: any
 ) => {
-  console.log('here in middleware =======');
+  console.log('CONTEXT', context.session);
 
   // middleware
   const result = await resolver(parent, args, context, info);
