@@ -8,7 +8,7 @@ const resolvers: ResolverMap = {
     login: async (
       _: any,
       { email, password }: GQL.ILoginOnMutationArguments,
-      { session }
+      { session, redis, req }
     ): Promise<GQL.ILoginResponse> => {
       const errorResponse = (path: string, message: string): GQL.ILoginResponse => ({
         ok: false,
@@ -28,6 +28,7 @@ const resolvers: ResolverMap = {
 
       // login successful
       session.userId = user.id;
+      await redis.lpush(user.id, req.sessionID);
 
       return {
         ok: true,

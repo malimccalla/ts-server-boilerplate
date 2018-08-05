@@ -1,5 +1,5 @@
 import { startServer } from './server';
 
-require('dotenv').config();
-
-startServer();
+startServer().then(res => {
+  console.log('Server listening on port', res.port);
+});

@@ -9,6 +9,7 @@ import * as session from 'express-session';
 import { GraphQLError } from 'graphql';
 import { Connection } from 'typeorm';
 
+import { redisSessionPrefix } from './constants';
 import { confirmEmail } from './routes/confirmEmail';
 import schema from './schema';
 import { redis } from './services/redis';
@@ -31,6 +32,7 @@ export const startServer = async () => {
       redis,
       session: req.session as Session,
       url: `${req.protocol}://${req.get('host')}`,
+      req,
     }),
     formatError: (e: GraphQLError) => console.log(e),
     schema,
@@ -40,7 +42,10 @@ export const startServer = async () => {
 
   app.use(
     session({
-      store: new RedisStore({}),
+      store: new RedisStore({
+        client: redis as any,
+        prefix: redisSessionPrefix,
+      }),
       resave: true,
       name: 'qid',
       secret: sessionSecret,
@@ -63,13 +68,11 @@ export const startServer = async () => {
     port = '8080';
     connection = await createTestConn(true);
   } else {
-    port = '4000';
+    port = process.env.PORT || '4000';
     connection = await createTypeormConn();
   }
 
   await app.listen({ port });
-
-  console.log(`Server listening on port`, port);
 
   return { connection, port };
 };
