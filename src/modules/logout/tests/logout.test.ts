@@ -41,4 +41,20 @@ describe('logout', () => {
     expect(res.data.logout).toBe(true);
     expect(res2.data.me).toBeNull();
   });
+
+  test('should logout multiple sessions', async () => {
+    const session1 = new TestClient(host);
+    const session2 = new TestClient(host);
+
+    await session1.login(email, password);
+    await session2.login(email, password);
+
+    // this logging out of one sesison should log out all sessions
+    await session1.logout();
+
+    const sess1User = await session1.me();
+    const sess2User = await session2.me();
+
+    expect(sess1User).toEqual(sess2User);
+  });
 });
