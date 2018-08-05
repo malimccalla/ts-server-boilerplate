@@ -32,8 +32,6 @@ export const startServer = async () => {
 
   const sessionSecret = process.env.SESSION_SECRET as string;
 
-  app.get('/confirm/:id', confirmEmail);
-
   app.use(
     session({
       store: new RedisStore({}),
@@ -48,6 +46,8 @@ export const startServer = async () => {
       },
     })
   );
+
+  app.get('/confirm/:id', confirmEmail);
 
   server.applyMiddleware({ app, path: '/' });
 

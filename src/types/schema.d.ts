@@ -21,6 +21,7 @@ declare namespace GQL {
   }
 
   interface IQuery {
+    me: IUser | null;
     hello: string;
   }
 
@@ -28,8 +29,13 @@ declare namespace GQL {
     name?: string | null;
   }
 
+  interface IUser {
+    email: string | null;
+    id: string;
+  }
+
   interface IMutation {
-    login: ILoginResponse | null;
+    login: ILoginResponse;
     register: IRegisterResponse;
   }
 
@@ -47,11 +53,6 @@ declare namespace GQL {
     ok: boolean;
     user: IUser | null;
     errors: Array<IError>;
-  }
-
-  interface IUser {
-    email: string | null;
-    id: string;
   }
 
   interface IError {

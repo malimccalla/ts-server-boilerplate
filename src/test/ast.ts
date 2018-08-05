@@ -34,3 +34,12 @@ export const loginMutation = (email: any, password: any) =>
     }
   }
 `);
+
+export const meQuery = print(gql`
+  query {
+    me {
+      email
+      id
+    }
+  }
+`);

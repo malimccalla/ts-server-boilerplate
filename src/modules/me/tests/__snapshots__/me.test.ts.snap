@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`me get the current user 1`] = `
+Object {
+  "me": null,
+}
+`;
