@@ -1,6 +1,6 @@
 import * as rp from 'request-promise';
 
-import { loginMutation, logout, meQuery } from './ast';
+import { loginMutation, logout, meQuery, registerMutation } from './ast';
 
 export class TestClient {
   url: string;
@@ -19,24 +19,37 @@ export class TestClient {
     };
   }
 
-  async me() {
-    return rp.post(this.url, {
-      ...this.options,
-      body: { query: meQuery },
-    });
-  }
-
-  async login(email: string, password: string) {
+  async login(
+    email: string,
+    password: string
+  ): Promise<{ data: { login: GQL.ILoginResponse } }> {
     return rp.post(this.url, {
       ...this.options,
       body: { query: loginMutation(email, password) },
     });
   }
 
-  async logout() {
+  async logout(): Promise<{ data: { logout: boolean } }> {
     return rp.post(this.url, {
       ...this.options,
       body: { query: logout },
+    });
+  }
+
+  async me(): Promise<{ data: { me: GQL.IUser } }> {
+    return rp.post(this.url, {
+      ...this.options,
+      body: { query: meQuery },
+    });
+  }
+
+  async register(
+    email: string,
+    password: string
+  ): Promise<{ data: { register: GQL.IRegisterResponse } }> {
+    return rp.post(this.url, {
+      ...this.options,
+      body: { query: registerMutation(email, password) },
     });
   }
 }
