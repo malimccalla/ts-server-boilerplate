@@ -44,7 +44,7 @@ export const meQuery = print(gql`
   }
 `);
 
-export const logout = print(gql`
+export const logoutMutation = print(gql`
   mutation {
     logout
   }

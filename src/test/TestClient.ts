@@ -1,6 +1,6 @@
 import * as rp from 'request-promise';
 
-import { loginMutation, logout, meQuery, registerMutation } from './ast';
+import { loginMutation, logoutMutation, meQuery, registerMutation } from './ast';
 
 export class TestClient {
   url: string;
@@ -32,7 +32,7 @@ export class TestClient {
   async logout(): Promise<{ data: { logout: boolean } }> {
     return rp.post(this.url, {
       ...this.options,
-      body: { query: logout },
+      body: { query: logoutMutation },
     });
   }
 
