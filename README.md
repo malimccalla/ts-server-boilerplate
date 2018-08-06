@@ -4,3 +4,4 @@ This repo serves as a bolilerplate server for all future projects
 * Typescript
 * TypeORM
 * Postgres
+* Redis
