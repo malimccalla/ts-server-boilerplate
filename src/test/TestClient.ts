@@ -1,6 +1,6 @@
 import * as rp from 'request-promise';
 
-import { loginMutation, logoutMutation, meQuery, registerMutation } from './ast';
+import * as ast from './ast';
 
 export class TestClient {
   url: string;
@@ -19,27 +19,37 @@ export class TestClient {
     };
   }
 
+  async forgotPasswordChange(
+    newPassword: string,
+    key: string
+  ): Promise<{ data: { forgotPasswordChange: GQL.IForgotPasswordChangeResponse } }> {
+    return rp.post(this.url, {
+      ...this.options,
+      body: { query: ast.forgotPasswordChangeMutation(newPassword, key) },
+    });
+  }
+
   async login(
     email: string,
     password: string
   ): Promise<{ data: { login: GQL.ILoginResponse } }> {
     return rp.post(this.url, {
       ...this.options,
-      body: { query: loginMutation(email, password) },
+      body: { query: ast.loginMutation(email, password) },
     });
   }
 
   async logout(): Promise<{ data: { logout: boolean } }> {
     return rp.post(this.url, {
       ...this.options,
-      body: { query: logoutMutation },
+      body: { query: ast.logoutMutation },
     });
   }
 
   async me(): Promise<{ data: { me: GQL.IUser } }> {
     return rp.post(this.url, {
       ...this.options,
-      body: { query: meQuery },
+      body: { query: ast.meQuery },
     });
   }
 
@@ -49,7 +59,7 @@ export class TestClient {
   ): Promise<{ data: { register: GQL.IRegisterResponse } }> {
     return rp.post(this.url, {
       ...this.options,
-      body: { query: registerMutation(email, password) },
+      body: { query: ast.registerMutation(email, password) },
     });
   }
 }
