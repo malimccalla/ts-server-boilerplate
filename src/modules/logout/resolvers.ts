@@ -1,30 +1,12 @@
-import { redisSessionPrefix, userSessionIdPrefix } from '../../constants';
 import { ResolverMap } from '../../types';
+import { deleteAllSessionsByUserId } from '../../util/deleteAllSessionsByUserId';
 
 const resolvers: ResolverMap = {
   Mutation: {
-    logout: async (_, __, { session, redis }) => {
+    logout: async (_, __, { session, redis }): Promise<boolean> => {
       const { userId } = session;
       if (userId) {
-        const sessionIds = await redis.lrange(`${userSessionIdPrefix}${userId}`, 0, -1);
-
-        const rPipeline = redis.multi();
-
-        sessionIds.forEach((key: string) => {
-          rPipeline.del(`${redisSessionPrefix}${key}`);
-        });
-
-        await rPipeline.exec(err => {
-          if (err) {
-            console.log(err);
-          }
-        });
-
-        session.destroy(err => {
-          if (err) {
-            console.log(err);
-          }
-        });
+        deleteAllSessionsByUserId(userId, redis, session);
 
         return true;
       }
