@@ -6,7 +6,7 @@ const resolvers: ResolverMap = {
     logout: async (_, __, { session, redis }): Promise<boolean> => {
       const { userId } = session;
       if (userId) {
-        deleteAllSessionsByUserId(userId, redis, session);
+        await deleteAllSessionsByUserId(userId, redis, session);
 
         return true;
       }
