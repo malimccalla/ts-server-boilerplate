@@ -22,7 +22,7 @@ export class TestClient {
   async forgotPasswordChange(
     newPassword: string,
     key: string
-  ): Promise<{ data: { forgotPasswordChange: GQL.IForgotPasswordChangeResponse } }> {
+  ): Promise<{ data: { forgotPasswordChange: GQL.IForgotPasswordResponse } }> {
     return rp.post(this.url, {
       ...this.options,
       body: { query: ast.forgotPasswordChangeMutation(newPassword, key) },
@@ -65,7 +65,7 @@ export class TestClient {
 
   async sendForgotPasswordEmail(
     email: string
-  ): Promise<{ data: { register: GQL.IRegisterResponse } }> {
+  ): Promise<{ data: { sendForgotPasswordEmail: GQL.IForgotPasswordResponse } }> {
     return rp.post(this.url, {
       ...this.options,
       body: { query: ast.sendForgotPasswordEmailMutation(email) },
