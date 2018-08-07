@@ -14,20 +14,9 @@ export const forgotPasswordChangeMutation = (newPassword: any, key: any) =>
   }
 `);
 
-export const registerMutation = (email: any, password: any) =>
-  print(gql`
+export const logoutMutation = print(gql`
   mutation {
-    register(email: "${email}", password: "${password}") {
-      ok
-      user {
-        id
-        email
-      }
-      errors {
-        path
-        message
-      }
-    }
+    logout
   }
 `);
 
@@ -57,8 +46,26 @@ export const meQuery = print(gql`
   }
 `);
 
-export const logoutMutation = print(gql`
+export const registerMutation = (email: any, password: any) =>
+  print(gql`
   mutation {
-    logout
+    register(email: "${email}", password: "${password}") {
+      ok
+      user {
+        id
+        email
+      }
+      errors {
+        path
+        message
+      }
+    }
+  }
+`);
+
+export const sendForgotPasswordEmailMutation = (email: any) =>
+  print(gql`
+  mutation {
+    sendForgotPasswordEmail(email: "${email}")
   }
 `);

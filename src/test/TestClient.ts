@@ -62,4 +62,13 @@ export class TestClient {
       body: { query: ast.registerMutation(email, password) },
     });
   }
+
+  async sendForgotPasswordEmail(
+    email: string
+  ): Promise<{ data: { register: GQL.IRegisterResponse } }> {
+    return rp.post(this.url, {
+      ...this.options,
+      body: { query: ast.sendForgotPasswordEmailMutation(email) },
+    });
+  }
 }
