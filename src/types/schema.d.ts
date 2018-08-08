@@ -63,7 +63,7 @@ declare namespace GQL {
 
   interface IForgotPasswordResponse {
     ok: boolean;
-    error: IError | null;
+    errors: Array<IError>;
   }
 
   interface IError {

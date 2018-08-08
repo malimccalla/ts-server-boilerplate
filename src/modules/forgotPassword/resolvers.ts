@@ -1,10 +1,19 @@
+import * as yup from 'yup';
+
 import { forgotPasswordPrefix } from '../../constants';
 import { User } from '../../entity/User';
+import { emailValidation, passwordValidation } from '../../services/yupSchemas';
 import { ResolverMap } from '../../types';
 import { createForgotPasswordLink } from '../../util/createForgotPasswordLink';
+import { formatYupError } from '../../util/formatYupError';
 import lockAccount from '../../util/lockAccount';
 
 const host = process.env.FRONTEND_HOST as string;
+
+const schema = yup.object().shape({
+  email: emailValidation,
+  password: passwordValidation,
+});
 
 const resolvers: ResolverMap = {
   Mutation: {
@@ -18,13 +27,20 @@ const resolvers: ResolverMap = {
       if (!userId) {
         return {
           ok: false,
-          error: { path: 'key', message: 'Expired key' },
+          errors: [{ path: 'key', message: 'Expired key' }],
         };
       }
 
-      console.log(newPassword);
+      try {
+        await schema.validate(newPassword);
+      } catch (error) {
+        return {
+          ok: false,
+          errors: formatYupError(error),
+        };
+      }
 
-      return { ok: true, error: null };
+      return { ok: true, errors: [] };
     },
     sendForgotPasswordEmail: async (
       _,
@@ -36,7 +52,7 @@ const resolvers: ResolverMap = {
       if (!user) {
         return {
           ok: false,
-          error: { path: 'email', message: 'Account does not exist' },
+          errors: [{ path: 'email', message: 'Account does not exist' }],
         };
       }
 
@@ -46,7 +62,7 @@ const resolvers: ResolverMap = {
 
       await lockAccount(session.userId!, redis, session);
 
-      return { ok: true, error: null };
+      return { ok: true, errors: [] };
     },
   },
 };

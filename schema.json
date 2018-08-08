@@ -319,13 +319,21 @@
               "deprecationReason": null
             },
             {
-              "name": "error",
+              "name": "errors",
               "description": "",
               "args": [],
               "type": {
-                "kind": "OBJECT",
-                "name": "Error",
-                "ofType": null
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "Error",
+                    "ofType": null
+                  }
+                }
               },
               "isDeprecated": false,
               "deprecationReason": null

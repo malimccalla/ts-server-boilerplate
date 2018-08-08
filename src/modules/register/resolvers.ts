@@ -1,20 +1,14 @@
 import * as yup from 'yup';
 
 import { User } from '../../entity/User';
+import { emailValidation, passwordValidation } from '../../services/yupSchemas';
 import { ResolverMap } from '../../types';
 import { createConfirmEmailLink } from '../../util/createConfirmEmailLink';
 import { formatYupError } from '../../util/formatYupError';
 
 const schema = yup.object().shape({
-  email: yup
-    .string()
-    .min(3)
-    .max(255)
-    .email('Invalid email'),
-  password: yup
-    .string()
-    .min(8, 'Password must be longer than 8 characters')
-    .max(255),
+  email: emailValidation,
+  password: passwordValidation,
 });
 
 const resolvers: ResolverMap = {

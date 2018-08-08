@@ -5,5 +5,5 @@ type Mutation {
 
 type ForgotPasswordResponse {
   ok: Boolean!
-  error: Error
+  errors: [Error!]
 }
