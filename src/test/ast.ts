@@ -6,7 +6,7 @@ export const forgotPasswordChangeMutation = (newPassword: any, key: any) =>
   mutation {
     forgotPasswordChange(newPassword: "${newPassword}", key: "${key}") {
       ok
-      error {
+      errors {
         path
         message
       }
@@ -66,6 +66,12 @@ export const registerMutation = (email: any, password: any) =>
 export const sendForgotPasswordEmailMutation = (email: any) =>
   print(gql`
   mutation {
-    sendForgotPasswordEmail(email: "${email}")
+    sendForgotPasswordEmail(email: "${email}") {
+      ok
+      errors {
+        message
+        path
+      }
+    }
   }
 `);
