@@ -12,6 +12,7 @@ import { Connection } from 'typeorm';
 import { redisSessionPrefix } from './constants';
 import { confirmEmail } from './routes/confirmEmail';
 import schema from './schema';
+import { limiter } from './services/rateLimit';
 import { redis } from './services/redis';
 import { createTestConn } from './test/createTestConn';
 import { Context, Session } from './types';
@@ -57,6 +58,8 @@ export const startServer = async () => {
       },
     })
   );
+
+  app.use(limiter);
 
   app.use(cors({ credentials: true, origin: '*' }));
 
