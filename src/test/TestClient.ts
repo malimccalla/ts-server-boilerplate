@@ -10,8 +10,8 @@ export class TestClient {
     json: boolean;
   };
 
-  constructor(url: string) {
-    this.url = url;
+  constructor() {
+    this.url = process.env.TEST_HOST as string;
     this.options = {
       jar: rp.jar(),
       withCredentials: true,

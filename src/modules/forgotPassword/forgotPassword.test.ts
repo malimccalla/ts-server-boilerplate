@@ -7,7 +7,6 @@ import { createTestConn } from '../../test/createTestConn';
 import { TestClient } from '../../test/TestClient';
 import { createForgotPasswordLink } from '../../util/createForgotPasswordLink';
 
-const host = process.env.TEST_HOST as string;
 faker.seed(Date.now() + Math.random());
 
 describe('Forgot password', () => {
@@ -34,7 +33,7 @@ describe('Forgot password', () => {
   });
 
   test('Should set a new password', async () => {
-    const client = new TestClient(host);
+    const client = new TestClient();
     const { key } = await createForgotPasswordLink('', userId, redis);
 
     const { data } = await client.forgotPasswordChange(newPassword, key);
@@ -42,14 +41,16 @@ describe('Forgot password', () => {
   });
 
   test('Should not set a new password with wrong key', async () => {
-    const client = new TestClient(host);
+    const client = new TestClient();
 
     const { data } = await client.forgotPasswordChange(newPassword, 'purpleRain');
+
     expect(data.forgotPasswordChange.ok).toBe(false);
+    expect(data.forgotPasswordChange).toMatchSnapshot();
   });
 
   test('Should be able to login with the new password', async () => {
-    const client = new TestClient(host);
+    const client = new TestClient();
     const { key } = await createForgotPasswordLink('', userId, redis);
 
     await client.forgotPasswordChange(newPassword, key);
@@ -60,7 +61,7 @@ describe('Forgot password', () => {
   });
 
   test('Should not be able to login with the old password', async () => {
-    const client = new TestClient(host);
+    const client = new TestClient();
     const { key } = await createForgotPasswordLink('', userId, redis);
 
     await client.forgotPasswordChange(newPassword, key);
