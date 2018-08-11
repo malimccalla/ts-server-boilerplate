@@ -1,19 +1,14 @@
-import * as yup from 'yup';
+import * as bcrypt from 'bcryptjs';
 
 import { forgotPasswordPrefix } from '../../constants';
 import { User } from '../../entity/User';
-import { emailValidation, passwordValidation } from '../../services/yupSchemas';
+import { passwordValidation } from '../../services/yupSchemas';
 import { ResolverMap } from '../../types';
 import { createForgotPasswordLink } from '../../util/createForgotPasswordLink';
 import { formatYupError } from '../../util/formatYupError';
 import lockAccount from '../../util/lockAccount';
 
 const host = process.env.FRONTEND_HOST as string;
-
-const schema = yup.object().shape({
-  email: emailValidation,
-  password: passwordValidation,
-});
 
 const resolvers: ResolverMap = {
   Mutation: {
@@ -22,7 +17,7 @@ const resolvers: ResolverMap = {
       { newPassword, key }: GQL.IForgotPasswordChangeOnMutationArguments,
       { redis }
     ): Promise<GQL.IForgotPasswordResponse> => {
-      const userId = redis.get(`${forgotPasswordPrefix}${key}`);
+      const userId = await redis.get(`${forgotPasswordPrefix}${key}`);
 
       if (!userId) {
         return {
@@ -32,13 +27,17 @@ const resolvers: ResolverMap = {
       }
 
       try {
-        await schema.validate(newPassword);
+        await passwordValidation.validate(newPassword);
       } catch (error) {
         return {
           ok: false,
           errors: formatYupError(error),
         };
       }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      await User.update({ id: userId }, { locked: false, password: hashedPassword });
 
       return { ok: true, errors: [] };
     },
