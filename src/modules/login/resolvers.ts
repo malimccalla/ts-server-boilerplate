@@ -8,7 +8,7 @@ const resolvers: ResolverMap = {
   Mutation: {
     login: async (
       _: any,
-      { email, password }: GQL.ILoginOnMutationArguments,
+      { input: { email, password } }: GQL.ILoginOnMutationArguments,
       { session, redis, req }
     ): Promise<GQL.ILoginResponse> => {
       const errorResponse = (path: string, message: string): GQL.ILoginResponse => ({

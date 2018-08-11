@@ -22,11 +22,6 @@ declare namespace GQL {
 
   interface IQuery {
     me: IUser | null;
-    hello: string;
-  }
-
-  interface IHelloOnQueryArguments {
-    name?: string | null;
   }
 
   interface IUser {
@@ -43,22 +38,23 @@ declare namespace GQL {
   }
 
   interface ISendForgotPasswordEmailOnMutationArguments {
-    email: string;
+    input: ISendForgotPasswordEmailInput;
   }
 
   interface IForgotPasswordChangeOnMutationArguments {
-    newPassword: string;
-    key: string;
+    input: IForgotPasswordChangeInput;
   }
 
   interface ILoginOnMutationArguments {
-    email: string;
-    password: string;
+    input: ILoginInput;
   }
 
   interface IRegisterOnMutationArguments {
+    input: IRegisterInput;
+  }
+
+  interface ISendForgotPasswordEmailInput {
     email: string;
-    password: string;
   }
 
   interface IForgotPasswordResponse {
@@ -71,10 +67,25 @@ declare namespace GQL {
     message: string;
   }
 
+  interface IForgotPasswordChangeInput {
+    newPassword: string;
+    key: string;
+  }
+
+  interface ILoginInput {
+    email: string;
+    password: string;
+  }
+
   interface ILoginResponse {
     ok: boolean;
     user: IUser | null;
     errors: Array<IError>;
+  }
+
+  interface IRegisterInput {
+    email: string;
+    password: string;
   }
 
   interface IRegisterResponse {

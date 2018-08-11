@@ -1,6 +1,15 @@
 type Mutation {
-  sendForgotPasswordEmail(email: String!): ForgotPasswordResponse!
-  forgotPasswordChange(newPassword: String!, key: String!): ForgotPasswordResponse!
+  sendForgotPasswordEmail(input: SendForgotPasswordEmailInput!): ForgotPasswordResponse!
+  forgotPasswordChange(input: ForgotPasswordChangeInput!): ForgotPasswordResponse!
+}
+
+input SendForgotPasswordEmailInput {
+  email: String!
+}
+
+input ForgotPasswordChangeInput {
+  newPassword: String!
+  key: String!
 }
 
 type ForgotPasswordResponse {

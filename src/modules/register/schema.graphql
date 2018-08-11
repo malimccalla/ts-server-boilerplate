@@ -1,5 +1,10 @@
 type Mutation {
-  register(email: String!, password: String!): RegisterResponse!
+  register(input: RegisterInput!): RegisterResponse!
+}
+
+input RegisterInput {
+  email: String!
+  password: String!
 }
 
 type RegisterResponse {

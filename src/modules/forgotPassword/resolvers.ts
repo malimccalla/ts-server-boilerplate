@@ -14,7 +14,7 @@ const resolvers: ResolverMap = {
   Mutation: {
     forgotPasswordChange: async (
       _,
-      { newPassword, key }: GQL.IForgotPasswordChangeOnMutationArguments,
+      { input: { key, newPassword } }: GQL.IForgotPasswordChangeOnMutationArguments,
       { redis }
     ): Promise<GQL.IForgotPasswordResponse> => {
       const redisKey = `${forgotPasswordPrefix}${key}`;
@@ -48,7 +48,7 @@ const resolvers: ResolverMap = {
     },
     sendForgotPasswordEmail: async (
       _,
-      { email }: GQL.ISendForgotPasswordEmailOnMutationArguments,
+      { input: { email } }: GQL.ISendForgotPasswordEmailOnMutationArguments,
       { session, redis }
     ): Promise<GQL.IForgotPasswordResponse> => {
       const user = await User.findOne({ where: { email } });

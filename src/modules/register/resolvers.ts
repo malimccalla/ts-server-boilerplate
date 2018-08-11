@@ -15,11 +15,11 @@ const resolvers: ResolverMap = {
   Mutation: {
     register: async (
       _: any,
-      args: GQL.IRegisterOnMutationArguments,
+      { input }: GQL.IRegisterOnMutationArguments,
       { redis, url }
     ): Promise<GQL.IRegisterResponse> => {
       try {
-        await schema.validate(args, { abortEarly: false });
+        await schema.validate(input, { abortEarly: false });
       } catch (error) {
         return {
           ok: false,
@@ -28,7 +28,7 @@ const resolvers: ResolverMap = {
         };
       }
 
-      const { email } = args;
+      const { email } = input;
       const userAlreadyExists = await User.findOne({
         select: ['id'],
         where: { email },
@@ -42,7 +42,7 @@ const resolvers: ResolverMap = {
         };
       }
 
-      const user = await User.create(args);
+      const user = await User.create(input);
       await user.save();
 
       await createConfirmEmailLink(url, user.id, redis);
