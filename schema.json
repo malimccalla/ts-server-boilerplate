@@ -180,28 +180,14 @@
               "description": "",
               "args": [
                 {
-                  "name": "email",
+                  "name": "input",
                   "description": "",
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "password",
-                  "description": "",
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
+                      "kind": "INPUT_OBJECT",
+                      "name": "LoginInput",
                       "ofType": null
                     }
                   },
@@ -237,28 +223,14 @@
               "description": "",
               "args": [
                 {
-                  "name": "email",
+                  "name": "input",
                   "description": "",
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "password",
-                  "description": "",
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
+                      "kind": "INPUT_OBJECT",
+                      "name": "RegisterInput",
                       "ofType": null
                     }
                   },
@@ -448,6 +420,45 @@
           "possibleTypes": null
         },
         {
+          "kind": "INPUT_OBJECT",
+          "name": "LoginInput",
+          "description": "",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "email",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "password",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
           "kind": "OBJECT",
           "name": "LoginResponse",
           "description": "",
@@ -503,6 +514,45 @@
           ],
           "inputFields": null,
           "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "RegisterInput",
+          "description": "",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "email",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "password",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
           "enumValues": null,
           "possibleTypes": null
         },

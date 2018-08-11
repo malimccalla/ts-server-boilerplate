@@ -10,15 +10,16 @@ import { createForgotPasswordLink } from '../../util/createForgotPasswordLink';
 faker.seed(Date.now() + Math.random());
 
 describe('Forgot password', () => {
-  const email = faker.internet.email();
   const oldPassword = faker.internet.password();
   const newPassword = 'whenDovesCry';
   const redis = new Redis();
   let conn: Connection;
   let userId: string;
+  let email: string;
 
   beforeEach(async () => {
     conn = await createTestConn();
+    email = faker.internet.email();
 
     const user = await User.create({
       email,
@@ -58,10 +59,10 @@ describe('Forgot password', () => {
     const { key } = await createForgotPasswordLink('', userId, redis);
 
     await client.forgotPasswordChange({ newPassword, key });
-    const { data } = await client.login(email, newPassword);
+    const res = await client.login({ email, password: newPassword });
 
-    expect(data.login.ok).toBe(true);
-    expect(data.login.user!.email).toEqual(email);
+    expect(res.login.ok).toBe(true);
+    expect(res.login.user!.email).toEqual(email);
   });
 
   test('Should not be able to login with the old password', async () => {
@@ -69,10 +70,10 @@ describe('Forgot password', () => {
     const { key } = await createForgotPasswordLink('', userId, redis);
 
     await client.forgotPasswordChange({ newPassword, key });
-    const { data } = await client.login(email, oldPassword);
+    const res = await client.login({ email, password: oldPassword });
 
-    expect(data.login.ok).toBe(false);
-    expect(data.login.user).toBeNull();
+    expect(res.login.ok).toBe(false);
+    expect(res.login.user).toBeNull();
   });
 
   test('Should hash the new password', async () => {

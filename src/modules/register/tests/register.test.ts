@@ -8,11 +8,7 @@ import { TestClient } from '../../../test/TestClient';
 faker.seed(Date.now() + Math.random());
 
 describe('Register', () => {
-  const validEmail = faker.internet.email();
-  const validPassword = faker.internet.password(10);
-
-  const invalidEmail = 'Invalid@email';
-  const invalidPassword = faker.internet.password(5);
+  const password = faker.internet.password(10);
 
   describe('Happy path', () => {
     let conn: Connection;
@@ -27,23 +23,27 @@ describe('Register', () => {
 
     test('should return a user on creation', async () => {
       const client = new TestClient();
-      const { data } = await client.register(validEmail, validPassword);
+      const email = faker.internet.email();
 
-      const user = await User.findOne({ where: { email: validEmail } });
+      const res = await client.register({ email, password });
 
-      expect(data.register.ok).toBe(true);
-      expect(data.register.user).toBeTruthy();
-      expect(data.register.user!.email).toEqual(validEmail);
+      const user = await User.findOne({ where: { email } });
+
+      expect(res.register.ok).toBe(true);
+      expect(res.register.user).toBeTruthy();
+      expect(res.register.user!.email).toEqual(email);
 
       // check password has been hashed
-      expect(user!.password).not.toEqual(validPassword);
+      expect(user!.password).not.toEqual(password);
     });
 
     test('user should not be confirmed on creation', async () => {
-      const client = new TestClient();
-      await client.register(validEmail, validPassword);
+      const email = faker.internet.email();
 
-      const user = await User.findOne({ where: { email: validEmail } });
+      const client = new TestClient();
+      await client.register({ email, password });
+
+      const user = await User.findOne({ where: { email } });
       expect(user!.confirmed).toBe(false);
     });
   });
@@ -61,24 +61,29 @@ describe('Register', () => {
 
     test('should not allow an invalid email', async () => {
       const client = new TestClient();
-      const { data } = await client.register(invalidEmail, validPassword);
+      const email = 'Master Blaster';
 
-      expect(data.register.ok).toBe(false);
-      expect(data.register.errors).toHaveLength(1);
-      expect(data.register.user).toBeFalsy();
-      expect(data.register.errors).toMatchSnapshot();
+      const res = await client.register({ email, password });
+
+      expect(res.register.ok).toBe(false);
+      expect(res.register.errors).toHaveLength(1);
+      expect(res.register.user).toBeFalsy();
+      expect(res.register.errors).toMatchSnapshot();
     });
 
     test('should not allow duplicate emails', async () => {
       const client = new TestClient();
-      const { data } = await client.register(validEmail, validPassword);
+      const email = faker.internet.email();
 
-      expect(data.register.ok).toBe(false);
-      expect(data.register.errors).toHaveLength(1);
-      expect(data.register.errors).toMatchSnapshot();
+      await client.register({ email, password });
+      const res = await client.register({ email, password });
 
-      expect(data.register.errors[0].path).toEqual('email');
-      expect(data.register.errors[0].message).toEqual('Email already in use');
+      expect(res.register.ok).toBe(false);
+      expect(res.register.errors).toHaveLength(1);
+      expect(res.register.errors).toMatchSnapshot();
+
+      expect(res.register.errors[0].path).toEqual('email');
+      expect(res.register.errors[0].message).toEqual('Email already in use');
     });
   });
 
@@ -95,12 +100,14 @@ describe('Register', () => {
 
     test('should not allow a password less than 8 characters', async () => {
       const client = new TestClient();
-      const { data } = await client.register(validEmail, invalidPassword);
+      const email = faker.internet.email();
 
-      expect(data.register.ok).toBe(false);
-      expect(data.register.errors).toHaveLength(1);
-      expect(data.register.user).toBeFalsy();
-      expect(data.register.errors).toMatchSnapshot();
+      const res = await client.register({ email, password: 'Hey Joe' });
+
+      expect(res.register.ok).toBe(false);
+      expect(res.register.errors).toHaveLength(1);
+      expect(res.register.user).toBeFalsy();
+      expect(res.register.errors).toMatchSnapshot();
     });
   });
 });

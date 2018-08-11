@@ -23,15 +23,15 @@ describe('Login', () => {
     const email = faker.internet.email();
     const password = faker.internet.password(10);
 
-    await client.register(email, password);
+    await client.register({ email, password });
 
     // Manually confirm the users email address
     await User.update({ email }, { confirmed: true });
 
-    const { data } = await client.login(email, password);
+    const res = await client.login({ email, password });
 
-    expect(data.login.ok).toBe(true);
-    expect(data.login.user!.email).toEqual(email);
+    expect(res.login.ok).toBe(true);
+    expect(res.login.user!.email).toEqual(email);
   });
 
   test('should not login a user without email confirmation', async () => {
@@ -39,11 +39,11 @@ describe('Login', () => {
     const email = faker.internet.email();
     const password = faker.internet.password(10);
 
-    await client.register(email, password);
-    const { data } = await client.login(email, password);
+    await client.register({ email, password });
+    const res = await client.login({ email, password });
 
-    expect(data.login.ok).toBe(false);
-    expect(data.login).toMatchSnapshot();
+    expect(res.login.ok).toBe(false);
+    expect(res.login).toMatchSnapshot();
   });
 
   test('should not login a user with a locked account', async () => {
@@ -51,15 +51,15 @@ describe('Login', () => {
     const email = faker.internet.email();
     const password = faker.internet.password(10);
 
-    await client.register(email, password);
+    await client.register({ email, password });
 
     // Manually confirm and lock the users account
     await User.update({ email }, { locked: true, confirmed: true });
 
-    const { data } = await client.login(email, password);
+    const res = await client.login({ email, password });
 
-    expect(data.login.ok).toBe(false);
-    expect(data.login).toMatchSnapshot();
+    expect(res.login.ok).toBe(false);
+    expect(res.login).toMatchSnapshot();
   });
 
   test('should not login a user with a bad email', async () => {
@@ -67,16 +67,16 @@ describe('Login', () => {
     const email = faker.internet.email();
     const password = faker.internet.password(10);
 
-    await client.register(email, password);
+    await client.register({ email, password });
 
     // Manually confirm the users email address
     await User.update({ email }, { confirmed: true });
 
-    const { data } = await client.login('wrong@email.com', password);
+    const res = await client.login({ email: 'npg dot com', password });
 
-    expect(data.login.ok).toBe(false);
-    expect(data.login.errors[0].path).toEqual('email');
-    expect(data.login).toMatchSnapshot();
+    expect(res.login.ok).toBe(false);
+    expect(res.login.errors[0].path).toEqual('email');
+    expect(res.login).toMatchSnapshot();
   });
 
   test('should not login a user with a bad password', async () => {
@@ -84,15 +84,15 @@ describe('Login', () => {
     const email = faker.internet.email();
     const password = faker.internet.password(10);
 
-    await client.register(email, password);
+    await client.register({ email, password });
 
     // Manually confirm the users email address
     await User.update({ email }, { confirmed: true });
 
-    const { data } = await client.login(email, 'wrong');
+    const res = await client.login({ email, password: 'iWannaBeYourLover' });
 
-    expect(data.login.ok).toBe(false);
-    expect(data.login.errors[0].path).toEqual('password');
-    expect(data.login).toMatchSnapshot();
+    expect(res.login.ok).toBe(false);
+    expect(res.login.errors[0].path).toEqual('password');
+    expect(res.login).toMatchSnapshot();
   });
 });

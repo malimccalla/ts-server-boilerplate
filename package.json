@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "A starting point for future projects",
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/bcryptjs": "^2.4.1",
     "@types/connect-redis": "^0.0.7",
     "@types/cors": "^2.8.4",
@@ -19,8 +20,10 @@
     "@types/uuid": "^3.4.3",
     "@types/yup": "^0.24.5",
     "apollo-codegen": "^0.19.1",
+    "fetch-cookie": "^0.7.2",
     "gql2ts": "^1.8.0",
     "jest": "^23.1.0",
+    "node-fetch": "^2.2.0",
     "nodemon": "^1.17.5",
     "prettier": "^1.13.4",
     "ts-jest": "^22.4.6",
@@ -32,6 +35,7 @@
   "dependencies": {
     "apollo-server": "2.0.0",
     "apollo-server-express": "^2.0.0",
+    "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "connect-redis": "^3.3.3",
     "cors": "^2.8.4",

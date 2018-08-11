@@ -51,13 +51,11 @@ declare namespace GQL {
   }
 
   interface ILoginOnMutationArguments {
-    email: string;
-    password: string;
+    input: ILoginInput;
   }
 
   interface IRegisterOnMutationArguments {
-    email: string;
-    password: string;
+    input: IRegisterInput;
   }
 
   interface ISendForgotPasswordEmailInput {
@@ -79,10 +77,20 @@ declare namespace GQL {
     key: string;
   }
 
+  interface ILoginInput {
+    email: string;
+    password: string;
+  }
+
   interface ILoginResponse {
     ok: boolean;
     user: IUser | null;
     errors: Array<IError>;
+  }
+
+  interface IRegisterInput {
+    email: string;
+    password: string;
   }
 
   interface IRegisterResponse {
