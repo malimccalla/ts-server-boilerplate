@@ -7,38 +7,40 @@ import { mutation, query } from './gql';
 // tslint:disable-next-line
 global['fetch'] = require('fetch-cookie/node-fetch')(require('node-fetch'));
 
-export class TestClient {
-  client: GraphQLClient = new GraphQLClient(process.env.TEST_HOST as string);
+export class TestClient extends GraphQLClient {
+  constructor() {
+    super(process.env.TEST_HOST!);
+  }
 
   async forgotPasswordChange(input: GQL.IForgotPasswordChangeInput) {
-    return this.client.request<{ forgotPasswordChange: GQL.IForgotPasswordResponse }>(
+    return this.request<{ forgotPasswordChange: GQL.IForgotPasswordResponse }>(
       mutation.forgotPasswordChange,
       { input }
     );
   }
 
   async login(input: GQL.ILoginInput) {
-    return this.client.request<{ login: GQL.ILoginResponse }>(mutation.login, {
+    return this.request<{ login: GQL.ILoginResponse }>(mutation.login, {
       input,
     });
   }
 
   async logout() {
-    return this.client.request<{ logout: boolean }>(mutation.logout);
+    return this.request<{ logout: boolean }>(mutation.logout);
   }
 
   async me() {
-    return this.client.request<{ me: GQL.IUser | null }>(query.me);
+    return this.request<{ me: GQL.IUser | null }>(query.me);
   }
 
   async register(input: GQL.IRegisterInput) {
-    return this.client.request<{ register: GQL.IRegisterResponse }>(mutation.register, {
+    return this.request<{ register: GQL.IRegisterResponse }>(mutation.register, {
       input,
     });
   }
 
   async sendForgotPasswordEmail(input: GQL.ISendForgotPasswordEmailInput) {
-    return this.client.request<{ sendForgotPasswordEmail: GQL.IForgotPasswordResponse }>(
+    return this.request<{ sendForgotPasswordEmail: GQL.IForgotPasswordResponse }>(
       mutation.sendForgotPasswordEmail,
       { input }
     );
