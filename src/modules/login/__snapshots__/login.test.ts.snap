@@ -26,6 +26,19 @@ Object {
 }
 `;
 
+exports[`Login should not login a user with a locked account 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "message": "Account is locked",
+      "path": "account",
+    },
+  ],
+  "ok": false,
+  "user": null,
+}
+`;
+
 exports[`Login should not login a user without email confirmation 1`] = `
 Object {
   "errors": Array [

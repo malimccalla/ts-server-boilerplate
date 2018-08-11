@@ -5,7 +5,6 @@ import { User } from '../../entity/User';
 import { createTestConn } from '../../test/createTestConn';
 import { TestClient } from '../../test/TestClient';
 
-const host = process.env.TEST_HOST as string;
 faker.seed(Date.now() + Math.random());
 
 describe('Login', () => {
@@ -20,7 +19,7 @@ describe('Login', () => {
   });
 
   test('should login a user', async () => {
-    const client = new TestClient(host);
+    const client = new TestClient();
     const email = faker.internet.email();
     const password = faker.internet.password(10);
 
@@ -36,7 +35,7 @@ describe('Login', () => {
   });
 
   test('should not login a user without email confirmation', async () => {
-    const client = new TestClient(host);
+    const client = new TestClient();
     const email = faker.internet.email();
     const password = faker.internet.password(10);
 
@@ -47,8 +46,24 @@ describe('Login', () => {
     expect(data.login).toMatchSnapshot();
   });
 
+  test('should not login a user with a locked account', async () => {
+    const client = new TestClient();
+    const email = faker.internet.email();
+    const password = faker.internet.password(10);
+
+    await client.register(email, password);
+
+    // Manually confirm and lock the users account
+    await User.update({ email }, { locked: true, confirmed: true });
+
+    const { data } = await client.login(email, password);
+
+    expect(data.login.ok).toBe(false);
+    expect(data.login).toMatchSnapshot();
+  });
+
   test('should not login a user with a bad email', async () => {
-    const client = new TestClient(host);
+    const client = new TestClient();
     const email = faker.internet.email();
     const password = faker.internet.password(10);
 
@@ -65,7 +80,7 @@ describe('Login', () => {
   });
 
   test('should not login a user with a bad password', async () => {
-    const client = new TestClient(host);
+    const client = new TestClient();
     const email = faker.internet.email();
     const password = faker.internet.password(10);
 

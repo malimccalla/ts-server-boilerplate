@@ -5,7 +5,6 @@ import { User } from '../../../entity/User';
 import { createTestConn } from '../../../test/createTestConn';
 import { TestClient } from '../../../test/TestClient';
 
-const host = process.env.TEST_HOST as string;
 faker.seed(Date.now() + Math.random());
 
 describe('Register', () => {
@@ -27,7 +26,7 @@ describe('Register', () => {
     });
 
     test('should return a user on creation', async () => {
-      const client = new TestClient(host);
+      const client = new TestClient();
       const { data } = await client.register(validEmail, validPassword);
 
       const user = await User.findOne({ where: { email: validEmail } });
@@ -41,7 +40,7 @@ describe('Register', () => {
     });
 
     test('user should not be confirmed on creation', async () => {
-      const client = new TestClient(host);
+      const client = new TestClient();
       await client.register(validEmail, validPassword);
 
       const user = await User.findOne({ where: { email: validEmail } });
@@ -61,7 +60,7 @@ describe('Register', () => {
     });
 
     test('should not allow an invalid email', async () => {
-      const client = new TestClient(host);
+      const client = new TestClient();
       const { data } = await client.register(invalidEmail, validPassword);
 
       expect(data.register.ok).toBe(false);
@@ -71,7 +70,7 @@ describe('Register', () => {
     });
 
     test('should not allow duplicate emails', async () => {
-      const client = new TestClient(host);
+      const client = new TestClient();
       const { data } = await client.register(validEmail, validPassword);
 
       expect(data.register.ok).toBe(false);
@@ -95,7 +94,7 @@ describe('Register', () => {
     });
 
     test('should not allow a password less than 8 characters', async () => {
-      const client = new TestClient(host);
+      const client = new TestClient();
       const { data } = await client.register(validEmail, invalidPassword);
 
       expect(data.register.ok).toBe(false);

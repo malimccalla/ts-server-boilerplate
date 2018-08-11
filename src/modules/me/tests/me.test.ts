@@ -5,7 +5,6 @@ import { User } from '../../../entity/User';
 import { createTestConn } from '../../../test/createTestConn';
 import { TestClient } from '../../../test/TestClient';
 
-const host = process.env.TEST_HOST as string;
 faker.seed(Date.now() + Math.random());
 
 describe('me', () => {
@@ -28,14 +27,14 @@ describe('me', () => {
   });
 
   test('should return null if no cookie', async () => {
-    const client = new TestClient(host);
+    const client = new TestClient();
     const response = await client.me();
 
     expect(response.data.me).toBeNull();
   });
 
   test('get the current user', async () => {
-    const client = new TestClient(host);
+    const client = new TestClient();
     await client.login(email, password);
 
     const res = await client.me();

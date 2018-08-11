@@ -5,7 +5,6 @@ import { User } from '../../../entity/User';
 import { createTestConn } from '../../../test/createTestConn';
 import { TestClient } from '../../../test/TestClient';
 
-const host = process.env.TEST_HOST as string;
 faker.seed(Date.now() + Math.random());
 
 describe('logout', () => {
@@ -28,7 +27,7 @@ describe('logout', () => {
   });
 
   test('logout a user', async () => {
-    const client = new TestClient(host);
+    const client = new TestClient();
     await client.login(email, password);
     const { data } = await client.me();
 
@@ -43,8 +42,8 @@ describe('logout', () => {
   });
 
   test('should logout multiple sessions', async () => {
-    const session1 = new TestClient(host);
-    const session2 = new TestClient(host);
+    const session1 = new TestClient();
+    const session2 = new TestClient();
 
     await session1.login(email, password);
     await session2.login(email, password);

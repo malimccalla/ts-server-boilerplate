@@ -27,6 +27,10 @@ const resolvers: ResolverMap = {
         return errorResponse('email', 'Please confirm your email address');
       }
 
+      if (user.locked) {
+        return errorResponse('account', 'Account is locked');
+      }
+
       // login successful
       session.userId = user.id;
       if (req.sessionID) {

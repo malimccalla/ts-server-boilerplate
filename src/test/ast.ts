@@ -1,20 +1,22 @@
 import { gql } from 'apollo-server';
 import { print } from 'graphql';
 
-export const registerMutation = (email: any, password: any) =>
+export const forgotPasswordChangeMutation = (newPassword: any, key: any) =>
   print(gql`
   mutation {
-    register(email: "${email}", password: "${password}") {
+    forgotPasswordChange(newPassword: "${newPassword}", key: "${key}") {
       ok
-      user {
-        id
-        email
-      }
       errors {
         path
         message
       }
     }
+  }
+`);
+
+export const logoutMutation = print(gql`
+  mutation {
+    logout
   }
 `);
 
@@ -44,8 +46,32 @@ export const meQuery = print(gql`
   }
 `);
 
-export const logoutMutation = print(gql`
+export const registerMutation = (email: any, password: any) =>
+  print(gql`
   mutation {
-    logout
+    register(email: "${email}", password: "${password}") {
+      ok
+      user {
+        id
+        email
+      }
+      errors {
+        path
+        message
+      }
+    }
+  }
+`);
+
+export const sendForgotPasswordEmailMutation = (email: any) =>
+  print(gql`
+  mutation {
+    sendForgotPasswordEmail(email: "${email}") {
+      ok
+      errors {
+        message
+        path
+      }
+    }
   }
 `);
