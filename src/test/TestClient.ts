@@ -1,76 +1,46 @@
 import { GraphQLClient } from 'graphql-request';
-import * as rp from 'request-promise';
 
-import * as ast from './ast';
+import { mutation, query } from './gql';
+
+// See: https://www.npmjs.com/package/graphql-request#cookie-support-for-node
+// @ts-ignore: Global has no index signature
+// tslint:disable-next-line
+global['fetch'] = require('fetch-cookie/node-fetch')(require('node-fetch'));
 
 export class TestClient {
-  client: GraphQLClient;
-  url: string;
-  options: {
-    withCredentials: boolean;
-    jar: any;
-    json: boolean;
-  };
-
-  constructor() {
-    this.client = new GraphQLClient(process.env.TEST_HOST as string, { headers: {} });
-    this.url = process.env.TEST_HOST as string;
-    this.options = {
-      jar: rp.jar(),
-      withCredentials: true,
-      json: true,
-    };
-  }
+  client: GraphQLClient = new GraphQLClient(process.env.TEST_HOST as string);
 
   async forgotPasswordChange(input: GQL.IForgotPasswordChangeInput) {
     return this.client.request<{ forgotPasswordChange: GQL.IForgotPasswordResponse }>(
-      ast.forgotPasswordChangeMutation,
-      {
-        input,
-      }
+      mutation.forgotPasswordChange,
+      { input }
     );
   }
 
-  async login(
-    email: string,
-    password: string
-  ): Promise<{ data: { login: GQL.ILoginResponse } }> {
-    return rp.post(this.url, {
-      ...this.options,
-      body: { query: ast.loginMutation(email, password) },
+  async login(input: GQL.ILoginInput) {
+    return this.client.request<{ login: GQL.ILoginResponse }>(mutation.login, {
+      input,
     });
   }
 
-  async logout(): Promise<{ data: { logout: boolean } }> {
-    return rp.post(this.url, {
-      ...this.options,
-      body: { query: ast.logoutMutation },
-    });
+  async logout() {
+    return this.client.request<{ logout: boolean }>(mutation.logout);
   }
 
-  async me(): Promise<{ data: { me: GQL.IUser } }> {
-    return rp.post(this.url, {
-      ...this.options,
-      body: { query: ast.meQuery },
-    });
+  async me() {
+    return this.client.request<{ me: GQL.IUser | null }>(query.me);
   }
 
-  async register(
-    email: string,
-    password: string
-  ): Promise<{ data: { register: GQL.IRegisterResponse } }> {
-    return rp.post(this.url, {
-      ...this.options,
-      body: { query: ast.registerMutation(email, password) },
+  async register(input: GQL.IRegisterInput) {
+    return this.client.request<{ register: GQL.IRegisterResponse }>(mutation.register, {
+      input,
     });
   }
 
   async sendForgotPasswordEmail(input: GQL.ISendForgotPasswordEmailInput) {
     return this.client.request<{ sendForgotPasswordEmail: GQL.IForgotPasswordResponse }>(
-      ast.sendForgotPasswordEmailMutation,
-      {
-        input,
-      }
+      mutation.sendForgotPasswordEmail,
+      { input }
     );
   }
 }
