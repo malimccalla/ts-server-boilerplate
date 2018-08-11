@@ -70,4 +70,25 @@ describe('Forgot password', () => {
     expect(data.login.ok).toBe(false);
     expect(data.login.user).toBeNull();
   });
+
+  test('Should hash the new password', async () => {
+    const client = new TestClient();
+    const { key } = await createForgotPasswordLink('', userId, redis);
+
+    await client.forgotPasswordChange(newPassword, key);
+
+    const user = await User.findOne({ where: { id: userId } });
+
+    expect(user!.password).not.toEqual(newPassword);
+  });
+
+  test('Should not be able to use the same key twice', async () => {
+    const client = new TestClient();
+    const { key } = await createForgotPasswordLink('', userId, redis);
+
+    await client.forgotPasswordChange(newPassword, key);
+    const { data } = await client.forgotPasswordChange('sometimesItSnowsInApril', key);
+
+    expect(data.forgotPasswordChange.ok).toBe(false);
+  });
 });

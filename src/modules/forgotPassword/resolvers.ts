@@ -17,7 +17,8 @@ const resolvers: ResolverMap = {
       { newPassword, key }: GQL.IForgotPasswordChangeOnMutationArguments,
       { redis }
     ): Promise<GQL.IForgotPasswordResponse> => {
-      const userId = await redis.get(`${forgotPasswordPrefix}${key}`);
+      const redisKey = `${forgotPasswordPrefix}${key}`;
+      const userId = await redis.get(redisKey);
 
       if (!userId) {
         return {
@@ -35,9 +36,13 @@ const resolvers: ResolverMap = {
         };
       }
 
+      // success
       const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-      await User.update({ id: userId }, { locked: false, password: hashedPassword });
+      await Promise.all([
+        User.update({ id: userId }, { locked: false, password: hashedPassword }),
+        redis.del(redisKey),
+      ]);
 
       return { ok: true, errors: [] };
     },
