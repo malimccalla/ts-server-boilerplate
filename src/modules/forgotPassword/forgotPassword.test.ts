@@ -36,24 +36,28 @@ describe('Forgot password', () => {
     const client = new TestClient();
     const { key } = await createForgotPasswordLink('', userId, redis);
 
-    const { data } = await client.forgotPasswordChange(newPassword, key);
-    expect(data.forgotPasswordChange.ok).toBe(true);
+    const res = await client.forgotPasswordChange({ newPassword, key });
+
+    expect(res.forgotPasswordChange.ok).toBe(true);
   });
 
   test('Should not set a new password with wrong key', async () => {
     const client = new TestClient();
 
-    const { data } = await client.forgotPasswordChange(newPassword, 'purpleRain');
+    const res = await client.forgotPasswordChange({
+      newPassword,
+      key: 'purpleRain',
+    });
 
-    expect(data.forgotPasswordChange.ok).toBe(false);
-    expect(data.forgotPasswordChange).toMatchSnapshot();
+    expect(res.forgotPasswordChange.ok).toBe(false);
+    expect(res.forgotPasswordChange).toMatchSnapshot();
   });
 
   test('Should be able to login with the new password', async () => {
     const client = new TestClient();
     const { key } = await createForgotPasswordLink('', userId, redis);
 
-    await client.forgotPasswordChange(newPassword, key);
+    await client.forgotPasswordChange({ newPassword, key });
     const { data } = await client.login(email, newPassword);
 
     expect(data.login.ok).toBe(true);
@@ -64,7 +68,7 @@ describe('Forgot password', () => {
     const client = new TestClient();
     const { key } = await createForgotPasswordLink('', userId, redis);
 
-    await client.forgotPasswordChange(newPassword, key);
+    await client.forgotPasswordChange({ newPassword, key });
     const { data } = await client.login(email, oldPassword);
 
     expect(data.login.ok).toBe(false);
@@ -75,7 +79,7 @@ describe('Forgot password', () => {
     const client = new TestClient();
     const { key } = await createForgotPasswordLink('', userId, redis);
 
-    await client.forgotPasswordChange(newPassword, key);
+    await client.forgotPasswordChange({ newPassword, key });
 
     const user = await User.findOne({ where: { id: userId } });
 
@@ -86,9 +90,12 @@ describe('Forgot password', () => {
     const client = new TestClient();
     const { key } = await createForgotPasswordLink('', userId, redis);
 
-    await client.forgotPasswordChange(newPassword, key);
-    const { data } = await client.forgotPasswordChange('sometimesItSnowsInApril', key);
+    await client.forgotPasswordChange({ newPassword, key });
+    const res = await client.forgotPasswordChange({
+      newPassword: 'sometimesItSnowsInApril',
+      key,
+    });
 
-    expect(data.forgotPasswordChange.ok).toBe(false);
+    expect(res.forgotPasswordChange.ok).toBe(false);
   });
 });

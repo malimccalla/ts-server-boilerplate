@@ -1,10 +1,9 @@
 import { gql } from 'apollo-server';
 import { print } from 'graphql';
 
-export const forgotPasswordChangeMutation = (newPassword: any, key: any) =>
-  print(gql`
-  mutation {
-    forgotPasswordChange(newPassword: "${newPassword}", key: "${key}") {
+export const forgotPasswordChangeMutation = print(gql`
+  mutation ForgotPasswordChangeMutation($input: ForgotPasswordChangeInput!) {
+    forgotPasswordChange(input: $input) {
       ok
       errors {
         path
@@ -63,10 +62,9 @@ export const registerMutation = (email: any, password: any) =>
   }
 `);
 
-export const sendForgotPasswordEmailMutation = (email: any) =>
-  print(gql`
-  mutation {
-    sendForgotPasswordEmail(email: "${email}") {
+export const sendForgotPasswordEmailMutation = print(gql`
+  mutation SendForgotPasswordEmailMutation($input: SendForgotPasswordEmailInput!) {
+    sendForgotPasswordEmail(input: $input) {
       ok
       errors {
         message

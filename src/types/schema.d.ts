@@ -43,12 +43,11 @@ declare namespace GQL {
   }
 
   interface ISendForgotPasswordEmailOnMutationArguments {
-    email: string;
+    input: ISendForgotPasswordEmailInput;
   }
 
   interface IForgotPasswordChangeOnMutationArguments {
-    newPassword: string;
-    key: string;
+    input: IForgotPasswordChangeInput;
   }
 
   interface ILoginOnMutationArguments {
@@ -61,6 +60,10 @@ declare namespace GQL {
     password: string;
   }
 
+  interface ISendForgotPasswordEmailInput {
+    email: string;
+  }
+
   interface IForgotPasswordResponse {
     ok: boolean;
     errors: Array<IError>;
@@ -69,6 +72,11 @@ declare namespace GQL {
   interface IError {
     path: string;
     message: string;
+  }
+
+  interface IForgotPasswordChangeInput {
+    newPassword: string;
+    key: string;
   }
 
   interface ILoginResponse {

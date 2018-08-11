@@ -1,8 +1,10 @@
+import { GraphQLClient } from 'graphql-request';
 import * as rp from 'request-promise';
 
 import * as ast from './ast';
 
 export class TestClient {
+  client: GraphQLClient;
   url: string;
   options: {
     withCredentials: boolean;
@@ -11,6 +13,7 @@ export class TestClient {
   };
 
   constructor() {
+    this.client = new GraphQLClient(process.env.TEST_HOST as string, { headers: {} });
     this.url = process.env.TEST_HOST as string;
     this.options = {
       jar: rp.jar(),
@@ -19,14 +22,13 @@ export class TestClient {
     };
   }
 
-  async forgotPasswordChange(
-    newPassword: string,
-    key: string
-  ): Promise<{ data: { forgotPasswordChange: GQL.IForgotPasswordResponse } }> {
-    return rp.post(this.url, {
-      ...this.options,
-      body: { query: ast.forgotPasswordChangeMutation(newPassword, key) },
-    });
+  async forgotPasswordChange(input: GQL.IForgotPasswordChangeInput) {
+    return this.client.request<{ forgotPasswordChange: GQL.IForgotPasswordResponse }>(
+      ast.forgotPasswordChangeMutation,
+      {
+        input,
+      }
+    );
   }
 
   async login(
@@ -63,12 +65,12 @@ export class TestClient {
     });
   }
 
-  async sendForgotPasswordEmail(
-    email: string
-  ): Promise<{ data: { sendForgotPasswordEmail: GQL.IForgotPasswordResponse } }> {
-    return rp.post(this.url, {
-      ...this.options,
-      body: { query: ast.sendForgotPasswordEmailMutation(email) },
-    });
+  async sendForgotPasswordEmail(input: GQL.ISendForgotPasswordEmailInput) {
+    return this.client.request<{ sendForgotPasswordEmail: GQL.IForgotPasswordResponse }>(
+      ast.sendForgotPasswordEmailMutation,
+      {
+        input,
+      }
+    );
   }
 }
