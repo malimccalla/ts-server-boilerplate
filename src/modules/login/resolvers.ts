@@ -38,7 +38,7 @@ const resolvers: ResolverMap = {
       }
 
       return {
-        ok: true,
+        ok: false,
         errors: [],
         user,
       };
