@@ -5,8 +5,6 @@ import { User } from '../../entity/User';
 import { createTestConn } from '../../test/createTestConn';
 import { TestClient } from '../../test/TestClient';
 
-faker.seed(Date.now() + Math.random());
-
 describe('logout', () => {
   const password = faker.internet.password();
   let email: string;
