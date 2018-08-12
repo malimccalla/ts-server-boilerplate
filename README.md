@@ -8,17 +8,17 @@
 
 - Express
 - GraphQL/Apollo Server
-- Typescript
+- TypeScript
 - TypeORM
 - Postgres
 - Redis
 
 ### Features:
 
-- [x] Forgot password flow
-- [x] Locking accounts
-- [x] Rate limiting
+- [x] Forgot Password Flow
+- [x] Locking Accounts
+- [x] Rate Limiting
 - [ ] Social OAuth (Google & Facebook)
-- [x] Continuous Intergration
+- [x] Continuous Integration
 - [ ] Database Migrations
 - [ ] Database Seeding
