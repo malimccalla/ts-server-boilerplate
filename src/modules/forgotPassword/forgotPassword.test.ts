@@ -7,7 +7,7 @@ import { createTestConn } from '../../test/createTestConn';
 import { TestClient } from '../../test/TestClient';
 import { createForgotPasswordLink } from '../../util/createForgotPasswordLink';
 
-faker.seed(Date.now() + Math.random());
+
 
 describe('Forgot password', () => {
   const oldPassword = faker.internet.password();

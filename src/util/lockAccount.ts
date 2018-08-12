@@ -1,4 +1,5 @@
-import { Redis } from '../../node_modules/@types/ioredis';
+import { Redis } from 'ioredis';
+
 import { User } from '../entity/User';
 import { Session } from '../types';
 import { deleteAllSessionsByUserId } from './deleteAllSessionsByUserId';

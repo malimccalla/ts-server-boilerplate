@@ -19,16 +19,12 @@ import { Context, Session } from './types';
 import { createTypeormConn } from './util/createTypeormConn';
 
 export const startServer = async () => {
-  if (process.env.NODE_ENV === 'test') {
-    await redis.flushall();
-  }
-
   const app = express();
   const RedisStore = connectRedis(session);
   let connection: Connection;
   let port: string;
 
-  const server = new ApolloServer({
+  const apolloServer = new ApolloServer({
     context: ({ req }: { req: express.Request }): Context => ({
       redis,
       session: req.session as Session,
@@ -59,13 +55,15 @@ export const startServer = async () => {
     })
   );
 
-  app.use(limiter);
+  if (process.env.NODE_ENV === 'production') {
+    app.use(limiter);
+  }
 
   app.use(cors({ credentials: true, origin: '*' }));
 
   app.get('/confirm/:id', confirmEmail);
 
-  server.applyMiddleware({ app, path: '/' });
+  apolloServer.applyMiddleware({ app, path: '/' });
 
   if (process.env.NODE_ENV === 'test') {
     port = '8080';
@@ -75,7 +73,7 @@ export const startServer = async () => {
     connection = await createTypeormConn();
   }
 
-  await app.listen({ port });
+  const server = await app.listen({ port });
 
-  return { connection, port };
+  return { connection, port, redis, server };
 };
