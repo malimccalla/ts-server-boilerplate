@@ -59,11 +59,13 @@ export const startServer = async () => {
     app.use(limiter);
   }
 
-  app.use(cors({ credentials: true, origin: '*' }));
+  const corsOptions = { credentials: true, origin: 'http://localhost:3000' };
+
+  app.use(cors(corsOptions));
 
   app.get('/confirm/:id', confirmEmail);
 
-  apolloServer.applyMiddleware({ app, path: '/' });
+  apolloServer.applyMiddleware({ app, path: '/', cors: corsOptions });
 
   if (process.env.NODE_ENV === 'test') {
     port = '8080';
