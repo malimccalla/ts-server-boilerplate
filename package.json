@@ -28,8 +28,7 @@
     "ts-jest": "^22.4.6",
     "ts-node": "6.0.5",
     "tslint": "^5.10.0",
-    "tslint-config-prettier": "^1.13.0",
-    "typescript": "2.9.2"
+    "tslint-config-prettier": "^1.13.0"
   },
   "dependencies": {
     "apollo-server": "2.0.0",
@@ -52,6 +51,7 @@
     "reflect-metadata": "^0.1.10",
     "request-promise": "^4.2.2",
     "typeorm": "^0.2.6",
+    "typescript": "^3.0.3",
     "uuid": "^3.3.2",
     "yup": "^0.25.1"
   },
