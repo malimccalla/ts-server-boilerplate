@@ -31,7 +31,7 @@
     "tslint-config-prettier": "^1.13.0"
   },
   "dependencies": {
-    "apollo-server": "2.0.0",
+    "apollo-server": "2.14.2",
     "apollo-server-express": "^2.0.0",
     "bcryptjs": "^2.4.3",
     "connect-redis": "^3.3.3",
